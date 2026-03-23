@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUKERHUB - Sistema Integrado</title>
+    <style>
+        :root {
+            --primary: #ff9900;
+            --bg: #0a0a0a;
+            --card: #161616;
+            --text: #ffffff;
+            --text-dim: #b0b0b0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* --- TELAS DE BLOQUEIO --- */
+        #ageGate {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        #authModal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000;
+            align-items: center; justify-content: center;
+        }
+        .gate-box, .auth-box { 
+            width: 90%; max-width: 400px; padding: 40px; 
+            background: var(--card); border: 2px solid var(--primary); border-radius: 10px; 
+        }
+
+        /* --- HEADER --- */
+        .header { background: #1b1b1b; border-bottom: 3px solid var(--primary); padding: 15px; position: sticky; top: 0; z-index: 1000; }
+        .header-container { max-width: 1500px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; text-decoration: none; color: #fff; }
+        .logo span { background: var(--primary); color: #000; padding: 2px 6px; border-radius: 4px; }
+
+        /* --- LAYOUT --- */
+        .main-wrapper { 
+            max-width: 1500px; margin: 20px auto; padding: 0 20px; display: flex; gap: 30px;
+            filter: blur(15px); pointer-events: none; transition: 0.5s; 
+        }
+        .main-wrapper.unlocked { filter: blur(0); pointer-events: auto; }
+
+        .sidebar { width: 200px; flex-shrink: 0; }
+        .content { flex-grow: 1; }
+
+        /* --- COMPONENTES --- */
+        .btn { background: var(--primary); border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; color: #000; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 8px 15px; cursor: pointer; border-radius: 4px; }
+        
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; }
+
+        #uploadBox { display: none; background: #1b1b1b; padding: 20px; border: 1px solid var(--primary); border-radius: 8px; margin-bottom: 30px; }
+
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .v-card { background: var(--card); border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; }
+        .v-thumb { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
+        .v-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .v-cat-tag { position: absolute; top: 5px; left: 5px; background: var(--primary); color: #000; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 2px; }
+        .delete-btn { position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; display: none; }
+        .v-card:hover .delete-btn { display: block; }
+        .v-info { padding: 10px; }
+
+        /* --- MODAL PLAYER --- */
+        .modal-player { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 6000; align-items: center; justify-content: center; }
+        .modal-player.active { display: flex; }
+        video { width: 90%; max-width: 1000px; border: 2px solid #333; }
+
+        #canvasHelper { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="ageGate">
+    <div class="gate-box">
+        <h1 style="color:var(--primary); margin-bottom:10px;">ADULT CONTENT</h1>
+        <p style="margin-bottom:20px;">Você precisa ter mais de 18 anos para acessar este site.</p>
+        <button class="btn" onclick="confirmAge()">TENHO +18 ANOS</button>
+    </div>
+</div>
+
+<div id="authModal">
+    <div class="auth-box">
+        <h2 id="authTitle" style="margin-bottom:20px; color:var(--primary)">Login</h2>
+        <input type="email" id="authEmail" placeholder="E-mail">
+        <input type="password" id="authPass" placeholder="Senha">
+        <button class="btn" style="width:100%" onclick="handleAuth()" id="authBtn">ENTRAR</button>
+        <p style="margin-top:15px; font-size:12px; text-align:center;">
+            <span id="toggleText">Novo por aqui?</span> <a href="#" onclick="toggleAuth()" style="color:var(--primary)">Criar conta</a>
+        </p>
+    </div>
+</div>
+
+<header class="header">
+    <div class="header-container">
+        <a href="#" class="logo">DUKER<span>HUB</span></a>
+        <div id="navRight">
+            <button class="btn" onclick="toggleUpload()">+ UPLOAD</button>
+            <button class="btn-outline" onclick="logout()" style="margin-left:10px;">SAIR</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-wrapper" id="mainUI">
+    <aside class="sidebar">
+        <h3 style="color:var(--primary); margin-bottom:15px;">CATEGORIAS</h3>
+        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Tudo')">Tudo</p>
+        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Caseiro')">Caseiro</p>
+        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Amador')">Amador</p>
+        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Premium')">Premium</p>
+    </aside>
+
+    <main class="content">
+        <section id="uploadBox">
+            <h3>Publicar Vídeo</h3>
+            <input type="text" id="vTitle" placeholder="Título do vídeo">
+            <select id="vCat">
+                <option value="Caseiro">Caseiro</option>
+                <option value="Amador">Amador</option>
+                <option value="Premium">Premium</option>
+            </select>
+            <input type="file" id="vFile" accept="video/*">
+            <button class="btn" onclick="uploadVideo()">PUBLICAR AGORA</button>
+        </section>
+
+        <div class="video-grid" id="videoGrid"></div>
+    </main>
+</div>
+
+<div class="modal-player" id="playerModal">
+    <button onclick="closePlayer()" style="position:absolute; top:20px; right:20px; color:white; background:none; border:1px solid white; padding:10px; cursor:pointer;">FECHAR X</button>
+    <video id="mainVid" controls></video>
+</div>
+
+<canvas id="canvasHelper"></canvas>
+
+<script>
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    let videos = JSON.parse(localStorage.getItem('videos')) || [];
+    let isLogin = true;
+
+    // --- SEGURANÇA ---
+    function confirmAge() {
+        document.getElementById('ageGate').style.display = 'none';
+        const user = sessionStorage.getItem('activeUser');
+        if(!user) {
+            document.getElementById('authModal').style.display = 'flex';
+        } else {
+            unlock();
+        }
+    }
+
+    function toggleAuth() {
+        isLogin = !isLogin;
+        document.getElementById('authTitle').innerText = isLogin ? "Login" : "Cadastro";
+        document.getElementById('authBtn').innerText = isLogin ? "ENTRAR" : "CADASTRAR";
+    }
+
+    function handleAuth() {
+        const email = document.getElementById('authEmail').value;
+        const pass = document.getElementById('authPass').value;
+        
+        if(isLogin) {
+            const u = users.find(x => x.email === email && x.pass === pass);
+            if(u) {
+                sessionStorage.setItem('activeUser', email);
+                unlock();
+            } else { alert("Dados incorretos!"); }
+        } else {
+            if(users.find(x => x.email === email)) return alert("E-mail já cadastrado!");
+            users.push({email, pass});
+            localStorage.setItem('users', JSON.stringify(users));
+            alert("Conta criada! Faça login.");
+            toggleAuth();
+        }
+    }
+
+    function unlock() {
+        document.getElementById('authModal').style.display = 'none';
+        document.getElementById('mainUI').classList.add('unlocked');
+        render('Tudo');
+    }
+
+    function logout() {
+        sessionStorage.removeItem('activeUser');
+        window.location.reload();
+    }
+
+    // --- VÍDEOS ---
+    function toggleUpload() {
+        const b = document.getElementById('uploadBox');
+        b.style.display = b.style.display === 'block' ? 'none' : 'block';
+    }
+
+    async function uploadVideo() {
+        const title = document.getElementById('vTitle').value;
+        const cat = document.getElementById('vCat').value;
+        const file = document.getElementById('vFile').files[0];
+
+        if(!title || !file) return alert("Preencha tudo!");
+
+        const url = URL.createObjectURL(file);
+        const thumb = await generateThumb(url);
+
+        videos.unshift({ id: Date.now(), title, cat, thumb, url });
+        localStorage.setItem('videos', JSON.stringify(videos));
+        render('Tudo');
+        toggleUpload();
+    }
+
+    function generateThumb(url) {
+        return new Promise(res => {
+            const v = document.createElement('video');
+            const c = document.getElementById('canvasHelper');
+            v.src = url;
+            v.currentTime = 1;
+            v.onloadeddata = () => {
+                setTimeout(() => {
+                    c.width = 400; c.height = 225;
+                    c.getContext('2d').drawImage(v, 0, 0, 400, 225);
+                    res(c.toDataURL('image/jpeg'));
+                }, 500);
+            };
+        });
+    }
+
+    function render(filter) {
+        const grid = document.getElementById('videoGrid');
+        grid.innerHTML = '';
+        const data = filter === 'Tudo' ? videos : videos.filter(v => v.cat === filter);
+
+        data.forEach(v => {
+            const card = document.createElement('div');
+            card.className = 'v-card';
+            card.onclick = () => {
+                const p = document.getElementById('playerModal');
+                const vid = document.getElementById('mainVid');
+                vid.src = v.url;
+                p.classList.add('active');
+                vid.play();
+            };
+            card.innerHTML = `
+                <div class="v-thumb">
+                    <img src="${v.thumb}">
+                    <span class="v-cat-tag">${v.cat}</span>
+                  
+                <div class="v-info"><b>${v.title}</b></div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function del(id, e) {
+        e.stopPropagation();
+        videos = videos.filter(v => v.id !== id);
+        localStorage.setItem('videos', JSON.stringify(videos));
+        render('Tudo');
+    }
+
+    function closePlayer() {
+        const p = document.getElementById('playerModal');
+        const vid = document.getElementById('mainVid');
+        p.classList.remove('active');
+        vid.pause();
+    }
+</script>
+</body>
+ <h3 style="color:var(--primary); margin-bottom:10px;">@MAKINA COMPANY</h3>
+</html>
