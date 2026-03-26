@@ -99,7 +99,106 @@
     </style>
 </head>
 <body>
+    
+<script>
+    // 1. CONFIGURAÇÃO UNIFICADA (MAKINA COMPANY)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBMlbl1DznEPxf1eOSsKRE2wHk5Jpw-2bc",
+        authDomain: "makina-company.firebaseapp.com",
+        databaseURL: "https://makina-company-default-rtdb.firebaseio.com",
+        projectId: "makina-company",
+        appId: "1:61683505551:web:5459aa3efb863c5388d3fa"
+    };
 
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 2. CORREÇÃO DE SESSÃO (IMPEDE LOGOUT AO RECARREGAR)
+    window.onload = () => {
+        // Usamos localStorage em vez de sessionStorage para manter o login mesmo fechando o navegador
+        const activeUser = localStorage.getItem('activeUser');
+        if (activeUser) {
+            document.getElementById('ageGate').style.display = 'none';
+            document.getElementById('authModal').style.display = 'none';
+            unlock();
+        }
+    };
+
+    // 3. MONITORAMENTO DE BLOQUEIO REMOTO (COMANDO DELEX)
+    db.ref('settings/status').on('value', snap => {
+        if(snap.val() === 'blocked') {
+            document.body.innerHTML = "<div style='background:#000; color:#fff; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;'><h1>SISTEMA SUSPENSO</h1><p>Eng.makina - Segurança Ativada</p></div>";
+        }
+    });
+
+    // 4. FUNÇÃO DE RENDERIZAÇÃO CORRIGIDA (BUSCA DO FIREBASE)
+    function render(filter) {
+        const grid = document.getElementById('videoGrid');
+        grid.innerHTML = '<p style="color:#444">A carregar conteúdo...</p>';
+
+        db.ref('videos').on('value', snapshot => {
+            grid.innerHTML = '';
+            snapshot.forEach(child => {
+                const v = child.val();
+                if (filter !== 'Tudo' && v.cat !== filter) return;
+
+                const card = document.createElement('div');
+                card.className = 'v-card';
+                
+                // Correção do clique: garante que a URL é passada corretamente
+                card.onclick = () => playVideo(v.url);
+
+                card.innerHTML = `
+                    <div class="v-thumb">
+                        <img src="${v.thumb || 'https://via.placeholder.com/400x225/111/444?text=SEM+CAPA'}" 
+                             onerror="this.src='https://via.placeholder.com/400x225/111/444?text=ERRO+IMAGEM'">
+                        <span class="v-cat-tag">${v.cat}</span>
+                    </div>
+                    <div class="v-info"><b>${v.title}</b></div>
+                `;
+                grid.appendChild(card);
+            });
+            // Chamada para injetar anúncios após os vídeos
+            if(typeof injectAds === 'function') injectAds();
+        });
+    }
+
+    // 5. PLAYER DE VÍDEO CORRIGIDO
+    function playVideo(url) {
+        if(!url) return alert("Erro: Link do vídeo inválido.");
+        const modal = document.getElementById('playerModal');
+        const vid = document.getElementById('mainVid');
+        
+        vid.src = url;
+        modal.classList.add('active');
+        vid.load(); // Força o carregamento do novo link
+        vid.play().catch(e => console.log("Erro ao reproduzir: ", e));
+    }
+
+    function closePlayer() {
+        const modal = document.getElementById('playerModal');
+        const vid = document.getElementById('mainVid');
+        modal.classList.remove('active');
+        vid.pause();
+        vid.src = ""; // Limpa o cache para não pesar o site
+    }
+
+    // 6. LOGIN COM PERSISTÊNCIA
+    function handleAuth() {
+        const email = document.getElementById('authEmail').value;
+        const pass = document.getElementById('authPass').value;
+        
+        db.ref('users').orderByChild('email').equalTo(email).once('value', snap => {
+            if(snap.exists()) {
+                const u = Object.values(snap.val())[0];
+                if(u.pass === pass) {
+                    localStorage.setItem('activeUser', email); // Grava para não deslogar
+                    unlock();
+                } else { alert("Senha incorreta."); }
+            } else { alert("Usuário não encontrado."); }
+        });
+    }
+</script>
 <div id="ageGate">
     <div class="gate-box">
         <div class="logo">XXDUKER<span>HUB</span></div>
