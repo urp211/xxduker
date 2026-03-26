@@ -1,254 +1,145 @@
+
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <script src="https://pl28983383.profitablecpmratenetwork.com/b6/7a/7a/b67a7ac02c907936db13c9963bc53da7.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>xxdukerhub | MAKINA company</title>
+    <title>DUKERHUB - Blue Edition | MAKINA Company</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <style>
-        /* Estilização Estratégica de Ads */
-.ad-container { 
-    background: #111; 
-    border: 1px solid #222; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    color: #444; 
-    font-size: 10px; 
-    text-transform: uppercase;
-    margin: 15px 0;
-    overflow: hidden;
-}
-
-.ad-inline { grid-column: 1 / -1; height: 120px; border-radius: 4px; } /* Ad no meio da grelha */
-.ad-sidebar { width: 100%; height: 250px; margin-top: 20px; } /* Ad na lateral */
-
-.ad-floating {
-    position: fixed; bottom: 20px; right: 20px; 
-    width: 300px; height: 100px; z-index: 9000;
-    background: #1b1b1b; border: 1px solid var(--primary);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    display: none;
-}
-.ad-close {
-    position: absolute; top: -10px; left: -10px; 
-    background: var(--primary); color: #000; 
-    width: 20px; height: 20px; border-radius: 50%;
-    text-align: center; line-height: 20px; cursor: pointer; font-size: 12px;
-}
         :root {
-            --primary: #ff9900; /* Laranja Adulto */
-            --bg: #050505;
-            --card: #121212;
-            --text: #ffffff;
+            --primary: #007bff; /* Azul vibrante */
+            --bg: #050a12;
+            --card: #0f172a;
+            --text: #f8fafc;
+            --accent: #38bdf8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* --- TELAS DE BLOQUEIO --- */
+        /* --- BLOQUEIOS --- */
         #ageGate, #authModal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999;
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 9999;
             display: flex; align-items: center; justify-content: center; text-align: center;
         }
-        .gate-box, .auth-box { 
-            width: 90%; max-width: 400px; padding: 40px; 
-            background: var(--card); border: 1px solid #333; border-radius: 8px; 
+        .box-ui { 
+            width: 90%; max-width: 400px; padding: 35px; 
+            background: var(--card); border: 1px solid var(--primary); border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
         }
 
         /* --- HEADER --- */
-        .header { background: #111; border-bottom: 2px solid var(--primary); padding: 15px; position: sticky; top: 0; z-index: 1000; }
-        .header-container { max-width: 1500px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 26px; font-weight: 900; text-decoration: none; color: #fff; }
-        .logo span { background: var(--primary); color: #000; padding: 2px 6px; border-radius: 4px; }
+        .header { background: #0f172a; border-bottom: 3px solid var(--primary); padding: 15px 5%; position: sticky; top: 0; z-index: 1000; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
+        .logo { font-size: 26px; font-weight: 800; color: #fff; text-decoration: none; }
+        .logo span { color: var(--primary); }
 
         /* --- LAYOUT --- */
         .main-wrapper { 
-            max-width: 1500px; margin: 20px auto; padding: 0 20px; display: flex; gap: 30px;
-            filter: blur(20px); pointer-events: none; transition: 0.5s; 
+            max-width: 1400px; margin: 20px auto; padding: 0 20px; display: flex; gap: 25px;
+            filter: blur(15px); pointer-events: none; transition: 0.5s; 
         }
         .main-wrapper.unlocked { filter: blur(0); pointer-events: auto; }
 
-        .sidebar { width: 180px; flex-shrink: 0; }
-        .cat-item { cursor: pointer; padding: 10px; border-radius: 4px; transition: 0.2s; color: #888; font-weight: bold; }
-        .cat-item:hover, .cat-item.active { background: #222; color: var(--primary); }
-<script async="async" data-cfasync="false" src="https://pl28983384.profitablecpmratenetwork.com/d2b175cc82a2bbf382730135e8f0b7ef/invoke.js"></script>
-<div id="container-d2b175cc82a2bbf382730135e8f0b7ef"></div>
+        .sidebar { width: 220px; flex-shrink: 0; }
+        .cat-btn { display: block; width: 100%; padding: 12px; margin-bottom: 8px; background: #1e293b; border: none; color: #94a3b8; text-align: left; cursor: pointer; border-radius: 6px; font-weight: 600; }
+        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; }
 
-        /* --- COMPONENTES --- */
-        .btn { background: var(--primary); border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; color: #000; width: 100%; margin-top: 10px; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; }
+        /* --- UPLOAD & ADS --- */
+        #uploadSection { background: #1e293b; padding: 20px; border-radius: 10px; margin-bottom: 25px; display: none; border-left: 4px solid var(--primary); }
+        .ad-slot { grid-column: 1 / -1; background: #111827; height: 100px; border: 1px dashed var(--primary); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 12px; border-radius: 8px; }
 
+        /* --- GRID DE VÍDEOS --- */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .v-card { background: var(--card); border-radius: 4px; overflow: hidden; cursor: pointer; border: 1px solid #222; transition: 0.3s; }
-        .v-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .v-card { background: var(--card); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid #1e293b; }
+        .v-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         .v-thumb { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
         .v-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .v-info { padding: 12px; font-size: 14px; }
+        .v-info { padding: 12px; font-size: 14px; font-weight: 600; }
 
-        /* --- MODAL PLAYER --- */
-        .modal-player { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; align-items: center; justify-content: center; }
-        .modal-player.active { display: flex; }
-        video { width: 100%; max-height: 85vh; outline: none; }
-        .close-btn { position: absolute; top: 20px; right: 20px; color: var(--primary); font-size: 30px; cursor: pointer; font-weight: bold; }
+        /* --- PLAYER --- */
+        .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; align-items: center; justify-content: center; }
+        .player-overlay.active { display: flex; flex-direction: column; }
+        .p-container { width: 90%; max-width: 1100px; background: #000; }
+        iframe, video { width: 100%; aspect-ratio: 16/9; }
+
+        /* --- INPUTS --- */
+        input, select { width: 100%; padding: 12px; margin-bottom: 12px; background: #020617; border: 1px solid #334155; color: #fff; border-radius: 6px; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
-    
-<script>
-    // 1. CONFIGURAÇÃO UNIFICADA (MAKINA COMPANY)
-    const firebaseConfig = {
-        apiKey: "AIzaSyBMlbl1DznEPxf1eOSsKRE2wHk5Jpw-2bc",
-        authDomain: "makina-company.firebaseapp.com",
-        databaseURL: "https://makina-company-default-rtdb.firebaseio.com",
-        projectId: "makina-company",
-        appId: "1:61683505551:web:5459aa3efb863c5388d3fa"
-    };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // 2. CORREÇÃO DE SESSÃO (IMPEDE LOGOUT AO RECARREGAR)
-    window.onload = () => {
-        // Usamos localStorage em vez de sessionStorage para manter o login mesmo fechando o navegador
-        const activeUser = localStorage.getItem('activeUser');
-        if (activeUser) {
-            document.getElementById('ageGate').style.display = 'none';
-            document.getElementById('authModal').style.display = 'none';
-            unlock();
-        }
-    };
-
-    // 3. MONITORAMENTO DE BLOQUEIO REMOTO (COMANDO DELEX)
-    db.ref('settings/status').on('value', snap => {
-        if(snap.val() === 'blocked') {
-            document.body.innerHTML = "<div style='background:#000; color:#fff; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;'><h1>SISTEMA SUSPENSO</h1><p>Eng.makina - Segurança Ativada</p></div>";
-        }
-    });
-
-    // 4. FUNÇÃO DE RENDERIZAÇÃO CORRIGIDA (BUSCA DO FIREBASE)
-    function render(filter) {
-        const grid = document.getElementById('videoGrid');
-        grid.innerHTML = '<p style="color:#444">A carregar conteúdo...</p>';
-
-        db.ref('videos').on('value', snapshot => {
-            grid.innerHTML = '';
-            snapshot.forEach(child => {
-                const v = child.val();
-                if (filter !== 'Tudo' && v.cat !== filter) return;
-
-                const card = document.createElement('div');
-                card.className = 'v-card';
-                
-                // Correção do clique: garante que a URL é passada corretamente
-                card.onclick = () => playVideo(v.url);
-
-                card.innerHTML = `
-                    <div class="v-thumb">
-                        <img src="${v.thumb || 'https://via.placeholder.com/400x225/111/444?text=SEM+CAPA'}" 
-                             onerror="this.src='https://via.placeholder.com/400x225/111/444?text=ERRO+IMAGEM'">
-                        <span class="v-cat-tag">${v.cat}</span>
-                    </div>
-                    <div class="v-info"><b>${v.title}</b></div>
-                `;
-                grid.appendChild(card);
-            });
-            // Chamada para injetar anúncios após os vídeos
-            if(typeof injectAds === 'function') injectAds();
-        });
-    }
-
-    // 5. PLAYER DE VÍDEO CORRIGIDO
-    function playVideo(url) {
-        if(!url) return alert("Erro: Link do vídeo inválido.");
-        const modal = document.getElementById('playerModal');
-        const vid = document.getElementById('mainVid');
-        
-        vid.src = url;
-        modal.classList.add('active');
-        vid.load(); // Força o carregamento do novo link
-        vid.play().catch(e => console.log("Erro ao reproduzir: ", e));
-    }
-
-    function closePlayer() {
-        const modal = document.getElementById('playerModal');
-        const vid = document.getElementById('mainVid');
-        modal.classList.remove('active');
-        vid.pause();
-        vid.src = ""; // Limpa o cache para não pesar o site
-    }
-
-    // 6. LOGIN COM PERSISTÊNCIA
-    function handleAuth() {
-        const email = document.getElementById('authEmail').value;
-        const pass = document.getElementById('authPass').value;
-        
-        db.ref('users').orderByChild('email').equalTo(email).once('value', snap => {
-            if(snap.exists()) {
-                const u = Object.values(snap.val())[0];
-                if(u.pass === pass) {
-                    localStorage.setItem('activeUser', email); // Grava para não deslogar
-                    unlock();
-                } else { alert("Senha incorreta."); }
-            } else { alert("Usuário não encontrado."); }
-        });
-    }
-</script>
 <div id="ageGate">
-    <div class="gate-box">
-        <div class="logo">XXDUKER<span>HUB</span></div>
-        <p style="margin: 20px 0; color: #ccc;">Aviso: Este site contém conteúdo adulto. Tens mais de 18 anos?</p>
-        <button class="btn" onclick="confirmAge()">SIM, TENHO +18</button>
-        <p onclick="window.location.href='https://google.com'" style="margin-top:15px; font-size:12px; cursor:pointer; color:#555;">Sair</p>
+    <div class="box-ui">
+        <h1 style="color:var(--primary)">DUKER<span>HUB</span></h1>
+        <p style="margin: 20px 0">Conteúdo restrito para maiores de 18 anos.</p>
+        <button class="btn-main" onclick="verifyAge()">SOU MAIOR DE 18</button>
     </div>
 </div>
 
 <div id="authModal" style="display:none;">
-    <div class="auth-box">
-        <h2 id="authTitle" style="color:var(--primary); margin-bottom:20px;">XXDUKERHUB</h2>
-        <input type="email" id="authEmail" placeholder="E-mail">
-        <input type="password" id="authPass" placeholder="Palavra-passe">
-        <button class="btn" onclick="handleAuth()" id="authBtn">ENTRAR</button>
-        <p style="margin-top:15px; font-size:12px; color:#888;">
-            <span id="toggleText">Novo aqui?</span> <a href="#" onclick="toggleAuth()" style="color:var(--primary); text-decoration:none;">Criar conta</a>
-        </p>
+    <div class="box-ui">
+        <h2 id="authTitle" style="margin-bottom:20px">Login</h2>
+        <input type="email" id="uEmail" placeholder="Seu e-mail">
+        <input type="password" id="uPass" placeholder="Sua senha">
+        <button class="btn-main" onclick="handleAuth()" id="authBtn">ENTRAR</button>
+        <p onclick="toggleAuth()" style="margin-top:15px; font-size:12px; cursor:pointer; color:var(--primary)">Criar nova conta</p>
     </div>
 </div>
 
 <header class="header">
     <div class="header-container">
-        <a href="#" class="logo" onclick="location.reload()">XXDUKER<span>HUB</span></a>
-        <div id="navRight">
-            <span id="userDisp" style="font-size:12px; color:#666; margin-right:15px;"></span>
-            <button onclick="logout()" style="background:none; border:1px solid #444; color:#fff; padding:5px 10px; cursor:pointer; border-radius:4px;">SAIR</button>
+        <a href="#" class="logo">DUKER<span>HUB</span></a>
+        <div>
+            <button class="btn-main" style="padding: 8px 15px; font-size: 13px;" onclick="toggleUpload()">+ POSTAR VÍDEO</button>
+            <button onclick="logout()" style="background:none; border:1px solid #334155; color:white; padding:8px 12px; margin-left:10px; border-radius:6px; cursor:pointer;">SAIR</button>
         </div>
     </div>
 </header>
 
 <div class="main-wrapper" id="mainUI">
     <aside class="sidebar">
-        <h4 style="color:#444; margin-bottom:15px; font-size:12px;">CATEGORIAS</h4>
-        <div class="cat-item active" onclick="render('Tudo', this)">Tudo</div>
-        <div class="cat-item" onclick="render('Premium', this)">Premium</div>
-        <div class="cat-item" onclick="render('Amador', this)">Amador</div>
-        <div class="cat-item" onclick="render('Caseiro', this)">Caseiro</div>
+        <h4 style="margin-bottom:15px; color:var(--primary)">NAVEGAÇÃO</h4>
+        <button class="cat-btn active" onclick="render('Tudo', this)">Tudo</button>
+        <button class="cat-btn" onclick="render('Premium', this)">Premium</button>
+        <button class="cat-btn" onclick="render('Amador', this)">Amador</button>
+        <button class="cat-btn" onclick="render('Caseiro', this)">Caseiro</button>
     </aside>
 
-    <main class="content">
-        <div class="video-grid" id="videoGrid">
-            </div>
+    <main style="flex:1">
+        <section id="uploadSection">
+            <h3 style="margin-bottom:15px">Publicar Conteúdo</h3>
+            <input type="text" id="vTitle" placeholder="Título do Vídeo">
+            <select id="vCat">
+                <option value="Amador">Amador</option>
+                <option value="Caseiro">Caseiro</option>
+                <option value="Premium">Premium</option>
+            </select>
+            <p style="font-size:12px; color:var(--accent); margin-bottom:5px;">Opção 1: Upload do PC (Gera Thumbnail Auto)</p>
+            <input type="file" id="vFile" accept="video/*">
+            <p style="font-size:12px; color:var(--accent); margin-bottom:5px;">Opção 2: Código Embed (Ex: iframe XNXX)</p>
+            <input type="text" id="vEmbed" placeholder='Cole o código <iframe> aqui'>
+            <button class="btn-main" id="upBtn" onclick="processUpload()">PUBLICAR AGORA</button>
+        </section>
+
+        <div class="video-grid" id="videoGrid"></div>
     </main>
 </div>
 
-<div class="modal-player" id="playerModal">
-    <div class="close-btn" onclick="closePlayer()">&times;</div>
-    <video id="mainVid" controls controlsList="nodownload"></video>
+<div class="player-overlay" id="playerModal">
+    <div style="text-align:right; width:90%; max-width:1100px; margin-bottom:10px;">
+        <button onclick="closePlayer()" style="background:red; color:white; border:none; padding:10px; cursor:pointer; border-radius:4px;">FECHAR X</button>
+    </div>
+    <div class="p-container" id="playerContainer"></div>
 </div>
+
+<canvas id="thumbCanvas" style="display:none;"></canvas>
 
 <script>
     // --- CONFIGURAÇÃO FIREBASE ---
@@ -264,174 +155,179 @@
     const db = firebase.database();
     let isLogin = true;
 
-    // --- LOGICA DE ACESSO ---
+    // --- SESSÃO E SEGURANÇA ---
     window.onload = () => {
-        const savedUser = sessionStorage.getItem('activeUser');
-        if(savedUser) {
-            document.getElementById('ageGate').style.display = 'none';
-            document.getElementById('authModal').style.display = 'none';
-            unlock(savedUser);
-        }
+        const user = localStorage.getItem('activeUser');
+        if(user) unlockSite();
     };
 
-    function confirmAge() {
+    function verifyAge() {
         document.getElementById('ageGate').style.display = 'none';
-        document.getElementById('authModal').style.display = 'flex';
+        if(!localStorage.getItem('activeUser')) document.getElementById('authModal').style.display = 'flex';
     }
 
     function toggleAuth() {
         isLogin = !isLogin;
-        document.getElementById('authTitle').innerText = isLogin ? "Membros MAKINA" : "Criar Conta";
+        document.getElementById('authTitle').innerText = isLogin ? "Login" : "Cadastro";
         document.getElementById('authBtn').innerText = isLogin ? "ENTRAR" : "CADASTRAR";
-        document.getElementById('toggleText').innerText = isLogin ? "Novo aqui?" : "Já tens conta?";
     }
 
     function handleAuth() {
-        const email = document.getElementById('authEmail').value.trim();
-        const pass = document.getElementById('authPass').value.trim();
-        const btn = document.getElementById('authBtn');
-
-        if(!email || !pass) {
-            alert("Por favor, preenche todos os campos.");
-            return;
-        }
-
-        btn.innerText = "A PROCESSAR...";
-        btn.disabled = true;
+        const email = document.getElementById('uEmail').value.trim();
+        const pass = document.getElementById('uPass').value.trim();
+        if(!email || !pass) return alert("Preencha os campos!");
 
         if(isLogin) {
-            // LÓGICA DE LOGIN
-            db.ref('users').orderByChild('email').equalTo(email).once('value')
-                .then((snapshot) => {
-                    if(snapshot.exists()) {
-                        const userData = Object.values(snapshot.val())[0];
-                        if(userData.pass === pass) {
-                            sessionStorage.setItem('activeUser', email);
-                            unlock(email);
-                        } else {
-                            alert("Palavra-passe errada!");
-                            resetBtn();
-                        }
-                    } else {
-                        alert("Utilizador não encontrado!");
-                        resetBtn();
-                    }
-                })
-                .catch((error) => {
-                    alert("Erro na ligação: " + error.message);
-                    resetBtn();
-                });
+            db.ref('users').orderByChild('email').equalTo(email).once('value', snap => {
+                if(snap.exists() && Object.values(snap.val())[0].pass === pass) {
+                    localStorage.setItem('activeUser', email);
+                    unlockSite();
+                } else { alert("Acesso negado!"); }
+            });
         } else {
-            // LÓGICA DE CADASTRO
-            db.ref('users').push({ email, pass })
-                .then(() => {
-                    alert("Conta criada com sucesso! Agora podes entrar.");
-                    isLogin = true;
-                    toggleAuth();
-                    resetBtn();
-                })
-                .catch((error) => {
-                    alert("Erro ao criar conta: " + error.message);
-                    resetBtn();
-                });
+            db.ref('users').push({ email, pass }).then(() => { alert("Conta criada!"); toggleAuth(); });
         }
     }
 
-    function resetBtn() {
-        const btn = document.getElementById('authBtn');
-        btn.innerText = isLogin ? "ENTRAR" : "CADASTRAR";
-        btn.disabled = false;
-    }
-
-    function unlock(email) {
+    function unlockSite() {
         document.getElementById('authModal').style.display = 'none';
         document.getElementById('mainUI').classList.add('unlocked');
-        document.getElementById('userDisp').innerText = email;
         render('Tudo');
     }
 
-    function logout() {
-        sessionStorage.clear();
-        location.reload();
+    function logout() { localStorage.clear(); location.reload(); }
+
+    // --- BLOQUEIO REMOTO "DELEX" ---
+    db.ref('settings/status').on('value', snap => {
+        if(snap.val() === 'blocked') {
+            document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%;'>SISTEMA BLOQUEADO: COMANDO DELEX ATIVO</h1>";
+            document.body.style.background = "#000";
+        }
+    });
+
+    // --- UPLOAD E THUMBNAIL ---
+    function toggleUpload() {
+        const box = document.getElementById('uploadSection');
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
     }
 
-    // --- RENDERIZAÇÃO DE VÍDEOS ---
+    async function processUpload() {
+        const title = document.getElementById('vTitle').value;
+        const cat = document.getElementById('vCat').value;
+        const file = document.getElementById('vFile').files[0];
+        const embed = document.getElementById('vEmbed').value;
+        const btn = document.getElementById('upBtn');
+
+        if(!title || (!file && !embed)) return alert("Dados insuficientes!");
+
+        btn.disabled = true; btn.innerText = "PROCESSANDO...";
+
+        let finalUrl = "";
+        let finalThumb = "https://via.placeholder.com/400x225/007bff/ffffff?text=DUKERHUB";
+        let type = embed ? "embed" : "file";
+
+        if(type === "file") {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                finalUrl = e.target.result;
+                finalThumb = await generateAutoThumb(finalUrl);
+                saveVideo(title, cat, finalUrl, finalThumb, "file");
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Extrair URL do iframe se o usuário colou o código todo
+            const match = embed.match(/src="([^"]+)"/);
+            finalUrl = match ? match[1] : embed;
+            saveVideo(title, cat, finalUrl, finalThumb, "embed");
+        }
+    }
+
+    function generateAutoThumb(url) {
+        return new Promise(res => {
+            const v = document.createElement('video');
+            v.src = url; v.currentTime = 1; v.muted = true;
+            v.onloadeddata = () => {
+                setTimeout(() => {
+                    const canvas = document.getElementById('thumbCanvas');
+                    canvas.width = 400; canvas.height = 225;
+                    canvas.getContext('2d').drawImage(v, 0, 0, 400, 225);
+                    res(canvas.toDataURL('image/jpeg'));
+                }, 500);
+            };
+        });
+    }
+
+    function saveVideo(title, cat, url, thumb, type) {
+        db.ref('videos').push({ title, cat, url, thumb, type, date: Date.now() }).then(() => {
+            alert("Vídeo publicado com sucesso!");
+            location.reload();
+        });
+    }
+
+    // --- RENDERIZAÇÃO E ANÚNCIOS ---
     function render(filter, el) {
         if(el) {
-            document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
         }
-
         const grid = document.getElementById('videoGrid');
-        grid.innerHTML = '<p style="color:#444; padding:20px;">A carregar catálogo...</p>';
+        grid.innerHTML = '';
 
-        db.ref('videos').on('value', snapshot => {
+        db.ref('videos').on('value', snap => {
             grid.innerHTML = '';
-            if(!snapshot.exists()) {
-                grid.innerHTML = '<p style="color:#444; padding:20px;">Nenhum conteúdo disponível ainda.</p>';
-                return;
-            }
-            snapshot.forEach(child => {
+            let count = 0;
+            snap.forEach(child => {
                 const v = child.val();
                 if(filter !== 'Tudo' && v.cat !== filter) return;
 
+                // Injetar anúncio a cada 4 vídeos
+                if(count > 0 && count % 4 === 0) {
+                    grid.innerHTML += `<div class="ad-slot">PUBLICIDADE - MAKINA ADS</div>`;
+                }
+
                 const card = document.createElement('div');
                 card.className = 'v-card';
-                card.onclick = () => playVideo(v.url);
+                card.onclick = () => openPlayer(v.url, v.type);
                 card.innerHTML = `
-                    <div class="v-thumb">
-                        <img src="${v.thumb}" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=XXDUKER'">
-                    </div>
-                    <div class="v-info">
-                        <b style="color:var(--primary)">${v.cat}</b><br>
-                        <span>${v.title}</span>
-                    </div>
+                    <div class="v-thumb"><img src="${v.thumb}"></div>
+                    <div class="v-info">${v.title}</div>
                 `;
                 grid.appendChild(card);
+                count++;
             });
         });
     }
 
-    function playVideo(url) {
+    // --- PLAYER MULTIFUNCIONAL ---
+    function openPlayer(url, type) {
         const modal = document.getElementById('playerModal');
-        const video = document.getElementById('mainVid');
-        video.src = url;
+        const container = document.getElementById('playerContainer');
         modal.classList.add('active');
-        video.play();
+
+        if(type === "embed") {
+            container.innerHTML = `<iframe src="${url}" frameborder="0" scrolling="no" allowfullscreen></iframe>`;
+        } else {
+            // Player nativo com "simulação" de qualidade (os navegadores gerenciam via bitrate se disponível)
+            container.innerHTML = `
+                <video id="vSource" controls>
+                    <source src="${url}" type="video/mp4">
+                </video>
+                <div style="background:#111; padding:10px; font-size:12px; display:flex; gap:10px;">
+                    <span style="color:var(--primary)">Qualidade: Auto (HD)</span>
+                </div>`;
+            document.getElementById('vSource').play();
+        }
     }
 
     function closePlayer() {
-        const modal = document.getElementById('playerModal');
-        const video = document.getElementById('mainVid');
-        modal.classList.remove('active');
-        video.pause();
-        video.src = "";
+        document.getElementById('playerModal').classList.remove('active');
+        document.getElementById('playerContainer').innerHTML = '';
     }
 </script>
-<div id="floatingAd" class="ad-floating">
-    <div class="ad-close" onclick="this.parentElement.style.display='none'">&times;</div>
-    <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="window.open('https://link-do-anuncio.com')">
-        <span style="font-size:11px; color:#555;">PUBLICIDADE PREMIUM</span>
-    </div>
-</div>
-</body>
-    <!-- ... resto do seu HTML (vídeos, categorias, etc) ... -->
 
-    <script>
-        // ESTE É O LUGAR DO SEU JAVASCRIPT
-        
-        // Exemplo: Código de monitoramento de bloqueio que você pediu
-        db.ref('settings/status').on('value', snap => {
-            if(snap.val() === 'blocked') {
-                document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%;'>SISTEMA BLOQUEADO PELO ADMINISTRADOR</h1>";
-                document.body.style.background = "black";
-            }
-        });
-        
-        // Outras funções de carregar vídeos, login, etc...
-    </script>
+<footer style="text-align:center; padding:40px; color:#334155; font-size:13px;">
+    © 2026 MAKINA COMPANY - CEO: Eng.makina
+</footer>
+
 </body>
-</html>
-   <script src="https://pl28983385.profitablecpmratenetwork.com/a6/a7/a3/a6a7a3dbc7601888cc58895406e2a487.js"></script>
- 
 </html>
