@@ -133,9 +133,11 @@
 
     // --- LOGICA DE ACESSO ---
     window.onload = () => {
-        if(sessionStorage.getItem('activeUser')) {
+        const savedUser = sessionStorage.getItem('activeUser');
+        if(savedUser) {
             document.getElementById('ageGate').style.display = 'none';
-            unlock(sessionStorage.getItem('activeUser'));
+            document.getElementById('authModal').style.display = 'none';
+            unlock(savedUser);
         }
     };
 
@@ -148,29 +150,64 @@
         isLogin = !isLogin;
         document.getElementById('authTitle').innerText = isLogin ? "Membros MAKINA" : "Criar Conta";
         document.getElementById('authBtn').innerText = isLogin ? "ENTRAR" : "CADASTRAR";
+        document.getElementById('toggleText').innerText = isLogin ? "Novo aqui?" : "Já tens conta?";
     }
 
     function handleAuth() {
-        const email = document.getElementById('authEmail').value;
-        const pass = document.getElementById('authPass').value;
-        if(!email || !pass) return alert("Preencha os campos!");
+        const email = document.getElementById('authEmail').value.trim();
+        const pass = document.getElementById('authPass').value.trim();
+        const btn = document.getElementById('authBtn');
+
+        if(!email || !pass) {
+            alert("Por favor, preenche todos os campos.");
+            return;
+        }
+
+        btn.innerText = "A PROCESSAR...";
+        btn.disabled = true;
 
         if(isLogin) {
-            db.ref('users').orderByChild('email').equalTo(email).once('value', snapshot => {
-                if(snapshot.exists()) {
-                    const userData = Object.values(snapshot.val())[0];
-                    if(userData.pass === pass) {
-                        sessionStorage.setItem('activeUser', email);
-                        unlock(email);
-                    } else { alert("Senha incorreta!"); }
-                } else { alert("Usuário não encontrado!"); }
-            });
+            // LÓGICA DE LOGIN
+            db.ref('users').orderByChild('email').equalTo(email).once('value')
+                .then((snapshot) => {
+                    if(snapshot.exists()) {
+                        const userData = Object.values(snapshot.val())[0];
+                        if(userData.pass === pass) {
+                            sessionStorage.setItem('activeUser', email);
+                            unlock(email);
+                        } else {
+                            alert("Palavra-passe errada!");
+                            resetBtn();
+                        }
+                    } else {
+                        alert("Utilizador não encontrado!");
+                        resetBtn();
+                    }
+                })
+                .catch((error) => {
+                    alert("Erro na ligação: " + error.message);
+                    resetBtn();
+                });
         } else {
-            db.ref('users').push({ email, pass }).then(() => {
-                alert("Conta criada! Já podes entrar.");
-                toggleAuth();
-            });
+            // LÓGICA DE CADASTRO
+            db.ref('users').push({ email, pass })
+                .then(() => {
+                    alert("Conta criada com sucesso! Agora podes entrar.");
+                    isLogin = true;
+                    toggleAuth();
+                    resetBtn();
+                })
+                .catch((error) => {
+                    alert("Erro ao criar conta: " + error.message);
+                    resetBtn();
+                });
         }
+    }
+
+    function resetBtn() {
+        const btn = document.getElementById('authBtn');
+        btn.innerText = isLogin ? "ENTRAR" : "CADASTRAR";
+        btn.disabled = false;
     }
 
     function unlock(email) {
@@ -193,10 +230,14 @@
         }
 
         const grid = document.getElementById('videoGrid');
-        grid.innerHTML = '<p style="color:#444">A carregar conteúdo...</p>';
+        grid.innerHTML = '<p style="color:#444; padding:20px;">A carregar catálogo...</p>';
 
         db.ref('videos').on('value', snapshot => {
             grid.innerHTML = '';
+            if(!snapshot.exists()) {
+                grid.innerHTML = '<p style="color:#444; padding:20px;">Nenhum conteúdo disponível ainda.</p>';
+                return;
+            }
             snapshot.forEach(child => {
                 const v = child.val();
                 if(filter !== 'Tudo' && v.cat !== filter) return;
@@ -234,10 +275,5 @@
         video.src = "";
     }
 </script>
-
-<footer style="text-align:center; padding:40px; color:#222; font-size:12px;">
-    @MAKINA COMPANY - XXDUKERHUB 2026
-</footer>
-
 </body>
 </html>
