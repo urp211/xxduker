@@ -309,39 +309,6 @@
         video.src = "";
     }
 </script>
-    function injectAds() {
-    const grid = document.getElementById('videoGrid');
-    const cards = grid.querySelectorAll('.card');
-
-    // 1. Injetar Anúncio no meio da grelha (após o 4º vídeo)
-    if (cards.length >= 4) {
-        const adInline = document.createElement('div');
-        adInline.className = 'ad-container ad-inline';
-        adInline.innerHTML = '<img src="link_do_anuncio.jpg" style="width:100%; height:100%; object-fit:cover;">';
-        cards[3].after(adInline);
-    }
-
-    // 2. Injetar Anúncio na Sidebar
-    const sidebar = document.querySelector('.sidebar');
-    if (!document.querySelector('.ad-sidebar')) {
-        const adSide = document.createElement('div');
-        adSide.className = 'ad-container ad-sidebar';
-        adSide.innerHTML = 'AD';
-        sidebar.appendChild(adSide);
-    }
-
-    // 3. Ativar Banner Flutuante após 5 segundos
-    setTimeout(() => {
-        const floatAd = document.getElementById('floatingAd');
-        if (floatAd) floatAd.style.display = 'block';
-    }, 5000);
-}
-
-// MODIFICAR a tua função loadVideos para chamar o injectAds no final:
-// db.ref('videos').on('value', snap => {
-//    ... código de renderização ...
-//    injectAds(); 
-// });
 <div id="floatingAd" class="ad-floating">
     <div class="ad-close" onclick="this.parentElement.style.display='none'">&times;</div>
     <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="window.open('https://link-do-anuncio.com')">
