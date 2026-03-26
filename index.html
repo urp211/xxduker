@@ -270,6 +270,99 @@
         p.classList.remove('active');
         vid.pause();
     }
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
+<script>
+    // 2. Configuração oficial da MAKINA company
+    const firebaseConfig = {
+        apiKey: "AIzaSyBMlbl1DznEPxf1eOSsKRE2wHk5Jpw-2bc",
+        authDomain: "makina-company.firebaseapp.com",
+        databaseURL: "https://makina-company-default-rtdb.firebaseio.com",
+        projectId: "makina-company",
+        storageBucket: "makina-company.firebasestorage.app",
+        messagingSenderId: "61683505551",
+        appId: "1:61683505551:web:5459aa3efb863c5388d3fa",
+        measurementId: "G-8J08GKXXC2"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 3. Função para carregar vídeos em Tempo Real
+    function loadGlobalVideos(filter = 'Tudo') {
+        const videoGrid = document.getElementById('videoGrid');
+        
+        // Referência à pasta 'videos' no seu Firebase
+        db.ref('videos').on('value', (snapshot) => {
+            videoGrid.innerHTML = ''; // Limpa a grade antes de carregar
+            const data = snapshot.val();
+
+            if (!data) {
+                videoGrid.innerHTML = '<p style="padding:20px;">Nenhum vídeo disponível no momento.</p>';
+                return;
+            }
+
+            // Transformar o objeto do Firebase em array e renderizar
+            Object.values(data).forEach(v => {
+                if (filter !== 'Tudo' && v.cat !== filter) return;
+
+                const card = document.createElement('div');
+                card.className = 'video-card'; // Usa a classe do seu modelo CSS
+                card.innerHTML = `
+                    <div class="video-thumbnail" style="background-image: url('${v.thumb}'); background-size: cover; background-position: center;">
+                        <div class="play-icon">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${v.title}</div>
+                        <div class="video-meta">
+                            <span class="duration">${v.cat}</span>
+                            <span>Assistir agora</span>
+                        </div>
+                    </div>
+                `;
+
+                // Ação ao clicar: Abre o modal e dá play
+                card.onclick = () => {
+                    const modal = document.getElementById('videoModal');
+                    const videoPlayer = document.getElementById('modalVideo');
+                    videoPlayer.src = v.url;
+                    modal.classList.add('active');
+                    videoPlayer.play();
+                };
+
+                videoGrid.appendChild(card);
+            });
+        });
+    }
+
+    // 4. Integração com o Sistema de Login
+    // Esta função deve ser chamada dentro da sua lógica de login atual
+    function unlockSite() {
+        document.getElementById('authModal').style.display = 'none';
+        document.getElementById('mainUI').style.filter = 'none';
+        document.getElementById('mainUI').style.pointerEvents = 'auto';
+        
+        // Carrega os vídeos assim que o site é desbloqueado
+        loadGlobalVideos('Tudo');
+    }
+
+    // 5. Filtros de Categoria
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.onclick = function() {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            loadGlobalVideos(this.innerText);
+        };
+    });
+
+    // Se o utilizador já estiver logado (sessionStorage), carrega direto
+    window.onload = () => {
+        if(sessionStorage.getItem('activeUser')) {
+            unlockSite();
+        }
+    };
 </script>
 </body>
     <script src="https://pl28983385.profitablecpmratenetwork.com/a6/a7/a3/a6a7a3dbc7601888cc58895406e2a487.js"></script>
