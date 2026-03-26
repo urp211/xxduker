@@ -11,6 +11,36 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <style>
+        /* Estilização Estratégica de Ads */
+.ad-container { 
+    background: #111; 
+    border: 1px solid #222; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: #444; 
+    font-size: 10px; 
+    text-transform: uppercase;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.ad-inline { grid-column: 1 / -1; height: 120px; border-radius: 4px; } /* Ad no meio da grelha */
+.ad-sidebar { width: 100%; height: 250px; margin-top: 20px; } /* Ad na lateral */
+
+.ad-floating {
+    position: fixed; bottom: 20px; right: 20px; 
+    width: 300px; height: 100px; z-index: 9000;
+    background: #1b1b1b; border: 1px solid var(--primary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: none;
+}
+.ad-close {
+    position: absolute; top: -10px; left: -10px; 
+    background: var(--primary); color: #000; 
+    width: 20px; height: 20px; border-radius: 50%;
+    text-align: center; line-height: 20px; cursor: pointer; font-size: 12px;
+}
         :root {
             --primary: #ff9900; /* Laranja Adulto */
             --bg: #050505;
@@ -279,6 +309,45 @@
         video.src = "";
     }
 </script>
+    function injectAds() {
+    const grid = document.getElementById('videoGrid');
+    const cards = grid.querySelectorAll('.card');
+
+    // 1. Injetar Anúncio no meio da grelha (após o 4º vídeo)
+    if (cards.length >= 4) {
+        const adInline = document.createElement('div');
+        adInline.className = 'ad-container ad-inline';
+        adInline.innerHTML = '<img src="link_do_anuncio.jpg" style="width:100%; height:100%; object-fit:cover;">';
+        cards[3].after(adInline);
+    }
+
+    // 2. Injetar Anúncio na Sidebar
+    const sidebar = document.querySelector('.sidebar');
+    if (!document.querySelector('.ad-sidebar')) {
+        const adSide = document.createElement('div');
+        adSide.className = 'ad-container ad-sidebar';
+        adSide.innerHTML = 'AD';
+        sidebar.appendChild(adSide);
+    }
+
+    // 3. Ativar Banner Flutuante após 5 segundos
+    setTimeout(() => {
+        const floatAd = document.getElementById('floatingAd');
+        if (floatAd) floatAd.style.display = 'block';
+    }, 5000);
+}
+
+// MODIFICAR a tua função loadVideos para chamar o injectAds no final:
+// db.ref('videos').on('value', snap => {
+//    ... código de renderização ...
+//    injectAds(); 
+// });
+<div id="floatingAd" class="ad-floating">
+    <div class="ad-close" onclick="this.parentElement.style.display='none'">&times;</div>
+    <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="window.open('https://link-do-anuncio.com')">
+        <span style="font-size:11px; color:#555;">PUBLICIDADE PREMIUM</span>
+    </div>
+</div>
 </body>
    <script src="https://pl28983385.profitablecpmratenetwork.com/a6/a7/a3/a6a7a3dbc7601888cc58895406e2a487.js"></script>
  
