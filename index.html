@@ -316,6 +316,23 @@
     </div>
 </div>
 </body>
+    <!-- ... resto do seu HTML (vídeos, categorias, etc) ... -->
+
+    <script>
+        // ESTE É O LUGAR DO SEU JAVASCRIPT
+        
+        // Exemplo: Código de monitoramento de bloqueio que você pediu
+        db.ref('settings/status').on('value', snap => {
+            if(snap.val() === 'blocked') {
+                document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%;'>SISTEMA BLOQUEADO PELO ADMINISTRADOR</h1>";
+                document.body.style.background = "black";
+            }
+        });
+        
+        // Outras funções de carregar vídeos, login, etc...
+    </script>
+</body>
+</html>
    <script src="https://pl28983385.profitablecpmratenetwork.com/a6/a7/a3/a6a7a3dbc7601888cc58895406e2a487.js"></script>
  
 </html>
