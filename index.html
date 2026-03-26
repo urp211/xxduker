@@ -1,371 +1,243 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
-<head> 
-   <meta name="google-site-verification" content="kzGrUIwpz8BRNQ5ZaDS6qHModjTDDNmkpC9g3RlpFrM" />
-   <script src="https://pl28983383.profitablecpmratenetwork.com/b6/7a/7a/b67a7ac02c907936db13c9963bc53da7.js"></script>
- <script async="async" data-cfasync="false" src="https://pl28983384.profitablecpmratenetwork.com/d2b175cc82a2bbf382730135e8f0b7ef/invoke.js"></script>
-<div id="container-d2b175cc82a2bbf382730135e8f0b7ef"></div>
-
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUKERHUB - Sistema Integrado</title>
+    <title>xxdukerhub | MAKINA company</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
-            --primary: #ff9900;
-            --bg: #0a0a0a;
-            --card: #161616;
+            --primary: #ff9900; /* Laranja Adulto */
+            --bg: #050505;
+            --card: #121212;
             --text: #ffffff;
-            --text-dim: #b0b0b0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
 
         /* --- TELAS DE BLOQUEIO --- */
-        #ageGate {
-            position: fixed; inset: 0; background: #000; z-index: 9999;
+        #ageGate, #authModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999;
             display: flex; align-items: center; justify-content: center; text-align: center;
-        }
-        #authModal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000;
-            align-items: center; justify-content: center;
         }
         .gate-box, .auth-box { 
             width: 90%; max-width: 400px; padding: 40px; 
-            background: var(--card); border: 2px solid var(--primary); border-radius: 10px; 
+            background: var(--card); border: 1px solid #333; border-radius: 8px; 
         }
 
         /* --- HEADER --- */
-        .header { background: #1b1b1b; border-bottom: 3px solid var(--primary); padding: 15px; position: sticky; top: 0; z-index: 1000; }
+        .header { background: #111; border-bottom: 2px solid var(--primary); padding: 15px; position: sticky; top: 0; z-index: 1000; }
         .header-container { max-width: 1500px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 24px; font-weight: 900; text-decoration: none; color: #fff; }
+        .logo { font-size: 26px; font-weight: 900; text-decoration: none; color: #fff; }
         .logo span { background: var(--primary); color: #000; padding: 2px 6px; border-radius: 4px; }
 
         /* --- LAYOUT --- */
         .main-wrapper { 
             max-width: 1500px; margin: 20px auto; padding: 0 20px; display: flex; gap: 30px;
-            filter: blur(15px); pointer-events: none; transition: 0.5s; 
+            filter: blur(20px); pointer-events: none; transition: 0.5s; 
         }
         .main-wrapper.unlocked { filter: blur(0); pointer-events: auto; }
 
-        .sidebar { width: 200px; flex-shrink: 0; }
-        .content { flex-grow: 1; }
+        .sidebar { width: 180px; flex-shrink: 0; }
+        .cat-item { cursor: pointer; padding: 10px; border-radius: 4px; transition: 0.2s; color: #888; font-weight: bold; }
+        .cat-item:hover, .cat-item.active { background: #222; color: var(--primary); }
 
         /* --- COMPONENTES --- */
-        .btn { background: var(--primary); border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; color: #000; }
-        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 8px 15px; cursor: pointer; border-radius: 4px; }
-        
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; }
-
-        #uploadBox { display: none; background: #1b1b1b; padding: 20px; border: 1px solid var(--primary); border-radius: 8px; margin-bottom: 30px; }
+        .btn { background: var(--primary); border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; color: #000; width: 100%; margin-top: 10px; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; }
 
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .v-card { background: var(--card); border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; }
+        .v-card { background: var(--card); border-radius: 4px; overflow: hidden; cursor: pointer; border: 1px solid #222; transition: 0.3s; }
+        .v-card:hover { border-color: var(--primary); transform: translateY(-5px); }
         .v-thumb { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
         .v-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .v-cat-tag { position: absolute; top: 5px; left: 5px; background: var(--primary); color: #000; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 2px; }
-        .delete-btn { position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; display: none; }
-        .v-card:hover .delete-btn { display: block; }
-        .v-info { padding: 10px; }
+        .v-info { padding: 12px; font-size: 14px; }
 
         /* --- MODAL PLAYER --- */
-        .modal-player { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 6000; align-items: center; justify-content: center; }
+        .modal-player { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; align-items: center; justify-content: center; }
         .modal-player.active { display: flex; }
-        video { width: 90%; max-width: 1000px; border: 2px solid #333; }
-
-        #canvasHelper { display: none; }
+        video { width: 100%; max-height: 85vh; outline: none; }
+        .close-btn { position: absolute; top: 20px; right: 20px; color: var(--primary); font-size: 30px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="ageGate">
     <div class="gate-box">
-        <h1 style="color:var(--primary); margin-bottom:10px;">ADULT CONTENT</h1>
-        <p style="margin-bottom:20px;">Você precisa ter mais de 18 anos para acessar este site.</p>
-        <button class="btn" onclick="confirmAge()">TENHO +18 ANOS</button>
+        <div class="logo">XXDUKER<span>HUB</span></div>
+        <p style="margin: 20px 0; color: #ccc;">Aviso: Este site contém conteúdo adulto. Tens mais de 18 anos?</p>
+        <button class="btn" onclick="confirmAge()">SIM, TENHO +18</button>
+        <p onclick="window.location.href='https://google.com'" style="margin-top:15px; font-size:12px; cursor:pointer; color:#555;">Sair</p>
     </div>
 </div>
 
-<div id="authModal">
+<div id="authModal" style="display:none;">
     <div class="auth-box">
-        <h2 id="authTitle" style="margin-bottom:20px; color:var(--primary)">Login</h2>
+        <h2 id="authTitle" style="color:var(--primary); margin-bottom:20px;">Membros MAKINA</h2>
         <input type="email" id="authEmail" placeholder="E-mail">
-        <input type="password" id="authPass" placeholder="Senha">
-        <button class="btn" style="width:100%" onclick="handleAuth()" id="authBtn">ENTRAR</button>
-        <p style="margin-top:15px; font-size:12px; text-align:center;">
-            <span id="toggleText">Novo por aqui?</span> <a href="#" onclick="toggleAuth()" style="color:var(--primary)">Criar conta</a>
+        <input type="password" id="authPass" placeholder="Palavra-passe">
+        <button class="btn" onclick="handleAuth()" id="authBtn">ENTRAR</button>
+        <p style="margin-top:15px; font-size:12px; color:#888;">
+            <span id="toggleText">Novo aqui?</span> <a href="#" onclick="toggleAuth()" style="color:var(--primary); text-decoration:none;">Criar conta</a>
         </p>
     </div>
 </div>
 
 <header class="header">
     <div class="header-container">
-        <a href="#" class="logo">DUKER<span>HUB</span></a>
+        <a href="#" class="logo" onclick="location.reload()">XXDUKER<span>HUB</span></a>
         <div id="navRight">
-            <button class="btn" onclick="toggleUpload()">+ UPLOAD</button>
-            <button class="btn-outline" onclick="logout()" style="margin-left:10px;">SAIR</button>
+            <span id="userDisp" style="font-size:12px; color:#666; margin-right:15px;"></span>
+            <button onclick="logout()" style="background:none; border:1px solid #444; color:#fff; padding:5px 10px; cursor:pointer; border-radius:4px;">SAIR</button>
         </div>
     </div>
 </header>
 
 <div class="main-wrapper" id="mainUI">
     <aside class="sidebar">
-        <h3 style="color:var(--primary); margin-bottom:15px;">CATEGORIAS</h3>
-        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Tudo')">Tudo</p>
-        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Caseiro')">Caseiro</p>
-        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Amador')">Amador</p>
-        <p style="cursor:pointer; margin-bottom:10px;" onclick="render('Premium')">Premium</p>
+        <h4 style="color:#444; margin-bottom:15px; font-size:12px;">CATEGORIAS</h4>
+        <div class="cat-item active" onclick="render('Tudo', this)">Tudo</div>
+        <div class="cat-item" onclick="render('Premium', this)">Premium</div>
+        <div class="cat-item" onclick="render('Amador', this)">Amador</div>
+        <div class="cat-item" onclick="render('Caseiro', this)">Caseiro</div>
     </aside>
 
     <main class="content">
-        <section id="uploadBox">
-            <h3>Publicar Vídeo</h3>
-            <input type="text" id="vTitle" placeholder="Título do vídeo">
-            <select id="vCat">
-                <option value="Caseiro">Caseiro</option>
-                <option value="Amador">Amador</option>
-                <option value="Premium">Premium</option>
-            </select>
-            <input type="file" id="vFile" accept="video/*">
-            <button class="btn" onclick="uploadVideo()">PUBLICAR AGORA</button>
-        </section>
-
-        <div class="video-grid" id="videoGrid"></div>
+        <div class="video-grid" id="videoGrid">
+            </div>
     </main>
 </div>
 
 <div class="modal-player" id="playerModal">
-    <button onclick="closePlayer()" style="position:absolute; top:20px; right:20px; color:white; background:none; border:1px solid white; padding:10px; cursor:pointer;">FECHAR X</button>
-    <video id="mainVid" controls></video>
+    <div class="close-btn" onclick="closePlayer()">&times;</div>
+    <video id="mainVid" controls controlsList="nodownload"></video>
 </div>
 
-<canvas id="canvasHelper"></canvas>
-
 <script>
-    let users = JSON.parse(localStorage.getItem('users')) || [];
-    let videos = JSON.parse(localStorage.getItem('videos')) || [];
+    // --- CONFIGURAÇÃO FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBMlbl1DznEPxf1eOSsKRE2wHk5Jpw-2bc",
+        authDomain: "makina-company.firebaseapp.com",
+        databaseURL: "https://makina-company-default-rtdb.firebaseio.com",
+        projectId: "makina-company",
+        appId: "1:61683505551:web:5459aa3efb863c5388d3fa"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
     let isLogin = true;
 
-    // --- SEGURANÇA ---
+    // --- LOGICA DE ACESSO ---
+    window.onload = () => {
+        if(sessionStorage.getItem('activeUser')) {
+            document.getElementById('ageGate').style.display = 'none';
+            unlock(sessionStorage.getItem('activeUser'));
+        }
+    };
+
     function confirmAge() {
         document.getElementById('ageGate').style.display = 'none';
-        const user = sessionStorage.getItem('activeUser');
-        if(!user) {
-            document.getElementById('authModal').style.display = 'flex';
-        } else {
-            unlock();
-        }
+        document.getElementById('authModal').style.display = 'flex';
     }
 
     function toggleAuth() {
         isLogin = !isLogin;
-        document.getElementById('authTitle').innerText = isLogin ? "Login" : "Cadastro";
+        document.getElementById('authTitle').innerText = isLogin ? "Membros MAKINA" : "Criar Conta";
         document.getElementById('authBtn').innerText = isLogin ? "ENTRAR" : "CADASTRAR";
     }
 
     function handleAuth() {
         const email = document.getElementById('authEmail').value;
         const pass = document.getElementById('authPass').value;
-        
+        if(!email || !pass) return alert("Preencha os campos!");
+
         if(isLogin) {
-            const u = users.find(x => x.email === email && x.pass === pass);
-            if(u) {
-                sessionStorage.setItem('activeUser', email);
-                unlock();
-            } else { alert("Dados incorretos!"); }
+            db.ref('users').orderByChild('email').equalTo(email).once('value', snapshot => {
+                if(snapshot.exists()) {
+                    const userData = Object.values(snapshot.val())[0];
+                    if(userData.pass === pass) {
+                        sessionStorage.setItem('activeUser', email);
+                        unlock(email);
+                    } else { alert("Senha incorreta!"); }
+                } else { alert("Usuário não encontrado!"); }
+            });
         } else {
-            if(users.find(x => x.email === email)) return alert("E-mail já cadastrado!");
-            users.push({email, pass});
-            localStorage.setItem('users', JSON.stringify(users));
-            alert("Conta criada! Faça login.");
-            toggleAuth();
+            db.ref('users').push({ email, pass }).then(() => {
+                alert("Conta criada! Já podes entrar.");
+                toggleAuth();
+            });
         }
     }
 
-    function unlock() {
+    function unlock(email) {
         document.getElementById('authModal').style.display = 'none';
         document.getElementById('mainUI').classList.add('unlocked');
+        document.getElementById('userDisp').innerText = email;
         render('Tudo');
     }
 
     function logout() {
-        sessionStorage.removeItem('activeUser');
-        window.location.reload();
+        sessionStorage.clear();
+        location.reload();
     }
 
-    // --- VÍDEOS ---
-    function toggleUpload() {
-        const b = document.getElementById('uploadBox');
-        b.style.display = b.style.display === 'block' ? 'none' : 'block';
-    }
+    // --- RENDERIZAÇÃO DE VÍDEOS ---
+    function render(filter, el) {
+        if(el) {
+            document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
 
-    async function uploadVideo() {
-        const title = document.getElementById('vTitle').value;
-        const cat = document.getElementById('vCat').value;
-        const file = document.getElementById('vFile').files[0];
-
-        if(!title || !file) return alert("Preencha tudo!");
-
-        const url = URL.createObjectURL(file);
-        const thumb = await generateThumb(url);
-
-        videos.unshift({ id: Date.now(), title, cat, thumb, url });
-        localStorage.setItem('videos', JSON.stringify(videos));
-        render('Tudo');
-        toggleUpload();
-    }
-
-    function generateThumb(url) {
-        return new Promise(res => {
-            const v = document.createElement('video');
-            const c = document.getElementById('canvasHelper');
-            v.src = url;
-            v.currentTime = 1;
-            v.onloadeddata = () => {
-                setTimeout(() => {
-                    c.width = 400; c.height = 225;
-                    c.getContext('2d').drawImage(v, 0, 0, 400, 225);
-                    res(c.toDataURL('image/jpeg'));
-                }, 500);
-            };
-        });
-    }
-
-    function render(filter) {
         const grid = document.getElementById('videoGrid');
-        grid.innerHTML = '';
-        const data = filter === 'Tudo' ? videos : videos.filter(v => v.cat === filter);
+        grid.innerHTML = '<p style="color:#444">A carregar conteúdo...</p>';
 
-        data.forEach(v => {
-            const card = document.createElement('div');
-            card.className = 'v-card';
-            card.onclick = () => {
-                const p = document.getElementById('playerModal');
-                const vid = document.getElementById('mainVid');
-                vid.src = v.url;
-                p.classList.add('active');
-                vid.play();
-            };
-            card.innerHTML = `
-                <div class="v-thumb">
-                    <img src="${v.thumb}">
-                    <span class="v-cat-tag">${v.cat}</span>
-                  
-                <div class="v-info"><b>${v.title}</b></div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    function del(id, e) {
-        e.stopPropagation();
-        videos = videos.filter(v => v.id !== id);
-        localStorage.setItem('videos', JSON.stringify(videos));
-        render('Tudo');
-    }
-
-    function closePlayer() {
-        const p = document.getElementById('playerModal');
-        const vid = document.getElementById('mainVid');
-        p.classList.remove('active');
-        vid.pause();
-    }
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-
-<script>
-    // 2. Configuração oficial da MAKINA company
-    const firebaseConfig = {
-        apiKey: "AIzaSyBMlbl1DznEPxf1eOSsKRE2wHk5Jpw-2bc",
-        authDomain: "makina-company.firebaseapp.com",
-        databaseURL: "https://makina-company-default-rtdb.firebaseio.com",
-        projectId: "makina-company",
-        storageBucket: "makina-company.firebasestorage.app",
-        messagingSenderId: "61683505551",
-        appId: "1:61683505551:web:5459aa3efb863c5388d3fa",
-        measurementId: "G-8J08GKXXC2"
-    };
-
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // 3. Função para carregar vídeos em Tempo Real
-    function loadGlobalVideos(filter = 'Tudo') {
-        const videoGrid = document.getElementById('videoGrid');
-        
-        // Referência à pasta 'videos' no seu Firebase
-        db.ref('videos').on('value', (snapshot) => {
-            videoGrid.innerHTML = ''; // Limpa a grade antes de carregar
-            const data = snapshot.val();
-
-            if (!data) {
-                videoGrid.innerHTML = '<p style="padding:20px;">Nenhum vídeo disponível no momento.</p>';
-                return;
-            }
-
-            // Transformar o objeto do Firebase em array e renderizar
-            Object.values(data).forEach(v => {
-                if (filter !== 'Tudo' && v.cat !== filter) return;
+        db.ref('videos').on('value', snapshot => {
+            grid.innerHTML = '';
+            snapshot.forEach(child => {
+                const v = child.val();
+                if(filter !== 'Tudo' && v.cat !== filter) return;
 
                 const card = document.createElement('div');
-                card.className = 'video-card'; // Usa a classe do seu modelo CSS
+                card.className = 'v-card';
+                card.onclick = () => playVideo(v.url);
                 card.innerHTML = `
-                    <div class="video-thumbnail" style="background-image: url('${v.thumb}'); background-size: cover; background-position: center;">
-                        <div class="play-icon">▶</div>
+                    <div class="v-thumb">
+                        <img src="${v.thumb}" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=XXDUKER'">
                     </div>
-                    <div class="video-info">
-                        <div class="video-title">${v.title}</div>
-                        <div class="video-meta">
-                            <span class="duration">${v.cat}</span>
-                            <span>Assistir agora</span>
-                        </div>
+                    <div class="v-info">
+                        <b style="color:var(--primary)">${v.cat}</b><br>
+                        <span>${v.title}</span>
                     </div>
                 `;
-
-                // Ação ao clicar: Abre o modal e dá play
-                card.onclick = () => {
-                    const modal = document.getElementById('videoModal');
-                    const videoPlayer = document.getElementById('modalVideo');
-                    videoPlayer.src = v.url;
-                    modal.classList.add('active');
-                    videoPlayer.play();
-                };
-
-                videoGrid.appendChild(card);
+                grid.appendChild(card);
             });
         });
     }
 
-    // 4. Integração com o Sistema de Login
-    // Esta função deve ser chamada dentro da sua lógica de login atual
-    function unlockSite() {
-        document.getElementById('authModal').style.display = 'none';
-        document.getElementById('mainUI').style.filter = 'none';
-        document.getElementById('mainUI').style.pointerEvents = 'auto';
-        
-        // Carrega os vídeos assim que o site é desbloqueado
-        loadGlobalVideos('Tudo');
+    function playVideo(url) {
+        const modal = document.getElementById('playerModal');
+        const video = document.getElementById('mainVid');
+        video.src = url;
+        modal.classList.add('active');
+        video.play();
     }
 
-    // 5. Filtros de Categoria
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.onclick = function() {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            loadGlobalVideos(this.innerText);
-        };
-    });
-
-    // Se o utilizador já estiver logado (sessionStorage), carrega direto
-    window.onload = () => {
-        if(sessionStorage.getItem('activeUser')) {
-            unlockSite();
-        }
-    };
+    function closePlayer() {
+        const modal = document.getElementById('playerModal');
+        const video = document.getElementById('mainVid');
+        modal.classList.remove('active');
+        video.pause();
+        video.src = "";
+    }
 </script>
-</body>
-    <script src="https://pl28983385.profitablecpmratenetwork.com/a6/a7/a3/a6a7a3dbc7601888cc58895406e2a487.js"></script>
 
- <h3 style="color:var(--primary); margin-bottom:10px;">@MAKINA COMPANY</h3>
+<footer style="text-align:center; padding:40px; color:#222; font-size:12px;">
+    @MAKINA COMPANY - XXDUKERHUB 2026
+</footer>
+
+</body>
 </html>
