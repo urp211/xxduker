@@ -8,9 +8,7 @@
     <!-- SDKs e Fontes -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    <link href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' 
-
-rel='stylesheet'/>
+    <link href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet'/>
     <link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet'/>
 
     <style>
@@ -20,43 +18,25 @@ rel='stylesheet'/>
         body { background: var(--bg); color: var(--text); }
 
         /* Modais de Segurança */
-        #gate, #auth { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: 
-
-center; justify-content: center; text-align: center; color: #fff; }
-        .box { width: 90%; max-width: 380px; padding: 30px; background: #1a1a1a; border-top: 4px solid var
-
-(--main); border-radius: 5px; }
+        #gate, #auth { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; }
+        .box { width: 90%; max-width: 380px; padding: 30px; background: #1a1a1a; border-top: 4px solid var(--main); border-radius: 5px; }
         
         /* Header & Nav */
-        header { background: var(--dark); height: 65px; display: flex; align-items: center; justify-content: 
-
-space-between; padding: 0 5%; position: sticky; top: 0; z-index: 999; }
+        header { background: var(--dark); height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; position: sticky; top: 0; z-index: 999; }
         .logo { color: #fff; font-size: 26px; font-weight: 800; text-decoration: none; text-transform: uppercase; }
         .logo span { background: var(--main); padding: 2px 8px; border-radius: 3px; margin-left: 5px; }
         
-        nav { background: var(--main); height: 42px; display: flex; align-items: center; padding: 0 5%; gap: 
-
-20px; overflow-x: auto; }
-        nav a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 700; text-transform: uppercase; 
-
-white-space: nowrap; }
+        nav { background: var(--main); height: 42px; display: flex; align-items: center; padding: 0 5%; gap: 20px; overflow-x: auto; }
+        nav a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
 
         /* Grid e Vídeos */
-        .container { max-width: 1250px; margin: 25px auto; padding: 0 15px; display: grid; grid-template-
-
-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; transition: 0.4s; }
-        .v-card { background: #fff; border-bottom: 3px solid #ddd; transition: 0.3s; cursor: pointer; box-shadow: 
-
-0 2px 5px rgba(0,0,0,0.05); }
+        .container { max-width: 1250px; margin: 25px auto; padding: 0 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; transition: 0.4s; }
+        .v-card { background: #fff; border-bottom: 3px solid #ddd; transition: 0.3s; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .v-card:hover { border-bottom-color: var(--main); transform: translateY(-3px); }
         
         .thumb { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; overflow: hidden; }
         .thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .thumb:after { content: '\f04b'; font-family: FontAwesome; position: absolute; inset: 0; display: flex; 
-
-align-items: center; justify-content: center; background: rgba(0,0,0,0.3); color: #fff; font-size: 20px; opacity: 0; 
-
-transition: 0.3s; }
+        .thumb:after { content: '\f04b'; font-family: FontAwesome; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); color: #fff; font-size: 20px; opacity: 0; transition: 0.3s; }
         .v-card:hover .thumb:after { opacity: 1; }
 
         .v-info { padding: 12px; }
@@ -64,31 +44,19 @@ transition: 0.3s; }
         .v-meta { font-size: 11px; color: #888; margin-top: 8px; font-weight: bold; text-transform: uppercase; }
 
         /* Anúncios MAKINA ADS */
-        .ad-banner { grid-column: 1 / -1; background: #eee; border: 1px dashed #bbb; height: 90px; display: 
-
-flex; align-items: center; justify-content: center; font-size: 12px; color: #777; font-weight: 800; letter-spacing: 
-
-2px; }
+        .ad-banner { grid-column: 1 / -1; background: #eee; border: 1px dashed #bbb; height: 90px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #777; font-weight: 800; letter-spacing: 2px; }
 
         /* Player Overlay */
-        #player { display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 11000; align-
-
-items: center; justify-content: center; }
+        #player { display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 11000; align-items: center; justify-content: center; }
         .p-wrap { width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: #000; position: relative; }
-        .p-close { position: absolute; top: -35px; right: 0; color: #fff; cursor: pointer; font-size: 14px; font-weight: 
-
-800; }
+        .p-close { position: absolute; top: -35px; right: 0; color: #fff; cursor: pointer; font-size: 14px; font-weight: 800; }
 
         /* Botões e Inputs */
         input { width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 3px; }
-        .btn { background: var(--main); color: #fff; border: none; padding: 12px 20px; border-radius: 3px; 
-
-cursor: pointer; font-weight: 700; width: 100%; }
+        .btn { background: var(--main); color: #fff; border: none; padding: 12px 20px; border-radius: 3px; cursor: pointer; font-weight: 700; width: 100%; }
         
         /* Delex (Bloqueio Remoto) */
-        #delex { display:none; position: fixed; inset: 0; background: #000; z-index: 20000; flex-direction: column; 
-
-align-items: center; justify-content: center; color: var(--main); font-weight: 900; }
+        #delex { display:none; position: fixed; inset: 0; background: #000; z-index: 20000; flex-direction: column; align-items: center; justify-content: center; color: var(--main); font-weight: 900; }
     </style>
 </head>
 <body>
@@ -97,9 +65,7 @@ align-items: center; justify-content: center; color: var(--main); font-weight: 9
 <div id="gate">
     <div class="box">
         <h2 class="logo">DUKER<span>HUB</span></h2>
-        <p style="margin: 20px 0; font-size: 14px; color: #ccc;">Este site contém conteúdo adulto. Confirma ter 
-
-mais de 18 anos?</p>
+        <p style="margin: 20px 0; font-size: 14px; color: #ccc;">Este site contém conteúdo adulto. Confirma ter mais de 18 anos?</p>
         <button class="btn" onclick="checkAge()">ENTRAR (SOU MAIOR)</button>
     </div>
 </div>
@@ -111,18 +77,14 @@ mais de 18 anos?</p>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="pass" placeholder="Senha">
         <button class="btn" onclick="doAuth()">CONTINUAR</button>
-        <p onclick="toggleAuth()" id="a-switch" style="font-size:12px; margin-top:15px; cursor:pointer; color: 
-
-#888;">Não tem conta? Registe-se</p>
+        <p onclick="toggleAuth()" id="a-switch" style="font-size:12px; margin-top:15px; cursor:pointer; color: #888;">Não tem conta? Registe-se</p>
     </div>
 </div>
 
 <header>
     <a href="/" class="logo">DUKER<span>HUB</span></a>
     <div style="display:flex; gap:10px;">
-        <button onclick="logout()" style="background:none; border:1px solid #444; color:#fff; padding:5px 
-
-10px; cursor:pointer; font-size:11px;">SAIR</button>
+        <button onclick="logout()" style="background:none; border:1px solid #444; color:#fff; padding:5px 10px; cursor:pointer; font-size:11px;">SAIR</button>
     </div>
 </header>
 
@@ -187,9 +149,7 @@ mais de 18 anos?</p>
     function toggleAuth() {
         isLogin = !isLogin;
         document.getElementById('a-title').innerText = isLogin ? "LOGIN" : "REGISTO";
-        document.getElementById('a-switch').innerText = isLogin ? "Não tem conta? Registe-se" : "Já tem 
-
-conta? Faça Login";
+        document.getElementById('a-switch').innerText = isLogin ? "Não tem conta? Registe-se" : "Já tem conta? Faça Login";
     }
 
     function doAuth() {
@@ -233,9 +193,7 @@ conta? Faça Login";
 
                 // Sistema de Anúncios MAKINA ADS (A cada 4 vídeos)
                 if(i > 0 && i % 4 === 0) {
-                    grid.innerHTML += `<div class="ad-banner">PUBLICIDADE MAKINA ADS 2026 - ESPAÇO 
-
-DISPONÍVEL</div>`;
+                    grid.innerHTML += `<div class="ad-banner">PUBLICIDADE MAKINA ADS 2026 - ESPAÇO DISPONÍVEL</div>`;
                 }
 
                 grid.innerHTML += `
@@ -267,9 +225,7 @@ DISPONÍVEL</div>`;
     }
 </script>
 
-<footer style="background:var(--dark); color:#555; text-align:center; padding:40px; font-size:12px; border-
-
-top: 1px solid #222;">
+<footer style="background:var(--dark); color:#555; text-align:center; padding:40px; font-size:12px; border-top: 1px solid #222;">
     DUKERHUB © 2026 - Desenvolvido pela MAKINA COMPANY<br>
     Conteúdo Adulto Gerido pelo Utilizador.
 </footer>
