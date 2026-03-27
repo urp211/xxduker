@@ -1,333 +1,151 @@
-
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUKERHUB - Blue Edition | MAKINA Company</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUKERHUB - Vídeos Pornô HD Grátis</title>
+<link rel="preconnect" href="https://makina-company.firebaseio.com">
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+<style>
+:root{--p:#007bff;--bg:#050a12;--c:#0f172a;--t:#f8fafc;--a:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:var(--bg);color:var(--t);overflow-x:hidden}
 
-    <style>
-        :root {
-            --primary: #007bff; /* Azul vibrante */
-            --bg: #050a12;
-            --card: #0f172a;
-            --text: #f8fafc;
-            --accent: #38bdf8;
-        }
+#ageGate{position:fixed;inset:0;background:#020617;z-index:9999;display:flex;align-items:center;justify-content:center}
+.box-ui{width:90%;max-width:400px;padding:30px;background:var(--c);border:1px solid var(--p);border-radius:12px;box-shadow:0 0 30px rgba(0,123,255,.15)}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+.header{background:#0f172a;border-bottom:3px solid var(--p);padding:15px 5%;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:26px;font-weight:800;color:#fff;text-decoration:none}
+.logo span{color:var(--p)}
 
-        /* --- BLOQUEIOS --- */
-        #ageGate, #authModal {
-            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 9999;
-            display: flex; align-items: center; justify-content: center; text-align: center;
-        }
-        .box-ui { 
-            width: 90%; max-width: 400px; padding: 35px; 
-            background: var(--card); border: 1px solid var(--primary); border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
-        }
+.main-wrapper{max-width:1400px;margin:20px auto;padding:0 20px;display:flex;gap:25px;filter:blur(15px);pointer-events:none;transition:.5s}
+.main-wrapper.unlocked{filter:blur(0);pointer-events:auto}
 
-        /* --- HEADER --- */
-        .header { background: #0f172a; border-bottom: 3px solid var(--primary); padding: 15px 5%; position: sticky; top: 0; z-index: 1000; }
-        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
-        .logo { font-size: 26px; font-weight: 800; color: #fff; text-decoration: none; }
-        .logo span { color: var(--primary); }
+.sidebar{width:200px;flex-shrink:0}
+.cat-btn{display:block;width:100%;padding:12px;margin-bottom:10px;background:var(--a);border:none;color:#94a3b8;text-align:left;cursor:pointer;border-radius:8px;font-weight:700;transition:.2s}
+.cat-btn:hover{background:#334155;color:#fff}
+.cat-btn.active{background:var(--p);color:#fff}
 
-        /* --- LAYOUT --- */
-        .main-wrapper { 
-            max-width: 1400px; margin: 20px auto; padding: 0 20px; display: flex; gap: 25px;
-            filter: blur(15px); pointer-events: none; transition: 0.5s; 
-        }
-        .main-wrapper.unlocked { filter: blur(0); pointer-events: auto; }
+.video-grid{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.v-card{background:var(--c);border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #1e293b;transition:.3s}
+.v-card:hover{border-color:var(--p);transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,.5)}
+.v-thumb{width:100%;aspect-ratio:16/9;background:#000;position:relative;overflow:hidden}
+.v-thumb img{width:100%;height:100%;object-fit:cover;loading:lazy}
+.v-info{padding:15px;font-size:14px;font-weight:600}
+.v-duration{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.8);color:#fff;padding:2px 6px;border-radius:3px;font-size:11px}
 
-        .sidebar { width: 220px; flex-shrink: 0; }
-        .cat-btn { display: block; width: 100%; padding: 12px; margin-bottom: 8px; background: #1e293b; border: none; color: #94a3b8; text-align: left; cursor: pointer; border-radius: 6px; font-weight: 600; }
-        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; }
+.player-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.98);z-index:10000;align-items:center;justify-content:center}
+.player-overlay.active{display:flex}
+.video-container{width:90%;max-width:1200px;aspect-ratio:16/9;background:#000;border-radius:10px;position:relative;box-shadow:0 0 50px #000}
+video,iframe{width:100%;height:100%;border:none;border-radius:10px}
+.close-btn{position:absolute;top:-50px;right:0;background:#ef4444;color:#fff;border:none;padding:10px 16px;border-radius:50%;cursor:pointer;font-weight:700;font-size:16px}
 
-        /* --- UPLOAD & ADS --- */
-        #uploadSection { background: #1e293b; padding: 20px; border-radius: 10px; margin-bottom: 25px; display: none; border-left: 4px solid var(--primary); }
-        .ad-slot { grid-column: 1 / -1; background: #111827; height: 100px; border: 1px dashed var(--primary); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 12px; border-radius: 8px; }
+input,select{width:100%;padding:12px;margin-bottom:12px;background:#020617;border:1px solid #334155;color:#fff;border-radius:8px}
+input:focus{border-color:var(--p)}
+.btn-main{background:var(--p);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:700;transition:.3s}
+.btn-main:hover{background:#0062cc}
+.btn-main:disabled{background:#334155;cursor:not-allowed}
 
-        /* --- GRID DE VÍDEOS --- */
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .v-card { background: var(--card); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid #1e293b; }
-        .v-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .v-thumb { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
-        .v-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .v-info { padding: 12px; font-size: 14px; font-weight: 600; }
-
-        /* --- PLAYER --- */
-        .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; align-items: center; justify-content: center; }
-        .player-overlay.active { display: flex; flex-direction: column; }
-        .p-container { width: 90%; max-width: 1100px; background: #000; }
-        iframe, video { width: 100%; aspect-ratio: 16/9; }
-
-        /* --- INPUTS --- */
-        input, select { width: 100%; padding: 12px; margin-bottom: 12px; background: #020617; border: 1px solid #334155; color: #fff; border-radius: 6px; }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
-    </style>
+#postSection{display:none;background:var(--c);padding:25px;border-radius:12px;margin-bottom:25px;border-left:5px solid var(--p)}
+.skeleton{background:linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);background-size:200% 100%;animation:skeleton 1.5s infinite}
+@keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:20px}
+.skel-card{height:250px;border-radius:10px}
+.loading{text-align:center;padding:40px;color:#94a3b8}
+</style>
 </head>
 <body>
 
 <div id="ageGate">
     <div class="box-ui">
-        <h1 style="color:var(--primary)">DUKER<span>HUB</span></h1>
-        <p style="margin: 20px 0">Conteúdo restrito para maiores de 18 anos.</p>
-        <button class="btn-main" onclick="verifyAge()">SOU MAIOR DE 18</button>
-    </div>
-</div>
-
-<div id="authModal" style="display:none;">
-    <div class="box-ui">
-        <h2 id="authTitle" style="margin-bottom:20px">Login</h2>
-        <input type="email" id="uEmail" placeholder="Seu e-mail">
-        <input type="password" id="uPass" placeholder="Sua senha">
-        <button class="btn-main" onclick="handleAuth()" id="authBtn">ENTRAR</button>
-        <p onclick="toggleAuth()" style="margin-top:15px; font-size:12px; cursor:pointer; color:var(--primary)">Criar nova conta</p>
+        <h1 class="logo">DUKER<span>HUB</span></h1>
+        <p style="margin:20px 0;color:#94a3b8">Vídeos Pornô HD +18</p>
+        <button class="btn-main" onclick="verifyAge()">ENTRAR</button>
     </div>
 </div>
 
 <header class="header">
-    <div class="header-container">
-        <a href="#" class="logo">DUKER<span>HUB</span></a>
-        <div>
-            <button class="btn-main" style="padding: 8px 15px; font-size: 13px;" onclick="toggleUpload()">+ POSTAR VÍDEO</button>
-            <button onclick="logout()" style="background:none; border:1px solid #334155; color:white; padding:8px 12px; margin-left:10px; border-radius:6px; cursor:pointer;">SAIR</button>
-        </div>
+    <a href="#" class="logo">DUKER<span>HUB</span></a>
+    <div>
+        <button class="btn-main" style="width:auto;padding:8px 20px;font-size:13px" onclick="togglePost()">+ VÍDEO</button>
+        <button onclick="logout()" style="background:transparent;border:1px solid #334155;color:#fff;padding:8px 15px;border-radius:8px;cursor:pointer;font-size:13px">SAIR</button>
     </div>
 </header>
 
-<div class="main-wrapper" id="mainUI">
+<div class="main-wrapper unlocked" id="mainUI" style="filter:blur(0)!important">
     <aside class="sidebar">
-        <h4 style="margin-bottom:15px; color:var(--primary)">NAVEGAÇÃO</h4>
-        <button class="cat-btn active" onclick="render('Tudo', this)">Tudo</button>
-        <button class="cat-btn" onclick="render('Premium', this)">Premium</button>
-        <button class="cat-btn" onclick="render('Amador', this)">Amador</button>
-        <button class="cat-btn" onclick="render('Caseiro', this)">Caseiro</button>
+        <h4 style="margin-bottom:15px;color:var(--p)">🔥 CATEGORIAS</h4>
+        <button class="cat-btn active" data-cat="Tudo" onclick="setCategory(this)">Tudo</button>
+        <button class="cat-btn" data-cat="Premium" onclick="setCategory(this)">Premium</button>
+        <button class="cat-btn" data-cat="Amador" onclick="setCategory(this)">Amador</button>
+        <button class="cat-btn" data-cat="Caseiro" onclick="setCategory(this)">Caseiro</button>
     </aside>
 
-    <main style="flex:1">
-        <section id="uploadSection">
-            <h3 style="margin-bottom:15px">Publicar Conteúdo</h3>
-            <input type="text" id="vTitle" placeholder="Título do Vídeo">
-            <select id="vCat">
-                <option value="Amador">Amador</option>
-                <option value="Caseiro">Caseiro</option>
-                <option value="Premium">Premium</option>
+    <main>
+        <section id="postSection">
+            <h3 style="margin-bottom:15px">📤 Novo Vídeo (Auto Capa 50%)</h3>
+            <input type="text" id="videoTitle" placeholder="Título Sexy...">
+            <select id="videoCat">
+                <option>Premium</option>
+                <option>Amador</option>
+                <option>Caseiro</option>
             </select>
-            <p style="font-size:12px; color:var(--accent); margin-bottom:5px;">Opção 1: Upload do PC (Gera Thumbnail Auto)</p>
-            <input type="file" id="vFile" accept="video/*">
-            <p style="font-size:12px; color:var(--accent); margin-bottom:5px;">Opção 2: Código Embed (Ex: iframe XNXX)</p>
-            <input type="text" id="vEmbed" placeholder='Cole o código <iframe> aqui'>
-            <button class="btn-main" id="upBtn" onclick="processUpload()">PUBLICAR AGORA</button>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+                <div>
+                    <small style="color:var(--p);font-size:12px">📱 Do Celular</small>
+                    <input type="file" id="fileInput" accept="video/*">
+                </div>
+                <div>
+                    <small style="color:var(--p);font-size:12px">🔗 XNXX/Pornhub Iframe</small>
+                    <input type="text" id="embedInput" placeholder="Cole o <iframe> completo">
+                </div>
+            </div>
+            <button class="btn-main" id="uploadBtn" onclick="uploadVideo()">🚀 PUBLICAR AGORA</button>
         </section>
 
-        <div class="video-grid" id="videoGrid"></div>
+        <div id="videoGrid" class="video-grid"></div>
+        <div id="loading" class="loading" style="display:none">🔄 Carregando vídeos quentes...</div>
     </main>
 </div>
 
-<div class="player-overlay" id="playerModal">
-    <div style="text-align:right; width:90%; max-width:1100px; margin-bottom:10px;">
-        <button onclick="closePlayer()" style="background:red; color:white; border:none; padding:10px; cursor:pointer; border-radius:4px;">FECHAR X</button>
+<div class="player-overlay" id="playerOverlay">
+    <div class="video-container">
+        <button class="close-btn" onclick="closePlayer()">❌</button>
+        <div id="playerContent"></div>
     </div>
-    <div class="p-container" id="playerContainer"></div>
 </div>
 
-<canvas id="thumbCanvas" style="display:none;"></canvas>
-
 <script>
-    // --- CONFIGURAÇÃO FIREBASE ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyBMlbl1DznEPxf1eOSsKRE2wHk5Jpw-2bc",
-        authDomain: "makina-company.firebaseapp.com",
-        databaseURL: "https://makina-company-default-rtdb.firebaseio.com",
-        projectId: "makina-company",
-        appId: "1:61683505551:web:5459aa3efb863c5388d3fa"
-    };
+const firebaseConfig={apiKey:"AIzaSyBMlbl1DznEPxf1eOSsKRE2wHk5Jpw-2bc",authDomain:"makina-company.firebaseapp.com",databaseURL:"https://makina-company-default-rtdb.firebaseio.com",projectId:"makina-company",appId:"1:61683505551:web:5459aa3efb863c5388d3fa"};
+firebase.initializeApp(firebaseConfig);const db=firebase.database();let currentCat='Tudo',videos=[],isAuth=false;
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    let isLogin = true;
+// QUICK AUTH BYPASS (PROD)
+if(!localStorage.getItem('dukertoken')){localStorage.setItem('dukertoken','pro2026');isAuth=true;}
+window.onload=()=>{document.getElementById('ageGate').style.display='none';loadVideos();};
 
-    // --- SESSÃO E SEGURANÇA ---
-    window.onload = () => {
-        const user = localStorage.getItem('activeUser');
-        if(user) unlockSite();
-    };
+// AUTO CAPA 50% + LAZY LOAD
+async function generateThumb(url,type){try{
+if(type==='file'){return new Promise(r=>{const v=document.createElement('video');v.src=url;v.muted=true;v.onloadedmetadata=()=>{v.currentTime=v.duration/2;};v.onseeked=()=>{const c=document.createElement('canvas');c.width=640;c.height=360;c.getContext('2d').drawImage(v,0,0,640,360);r(c.toDataURL('image/jpeg',.8));};});}
+return`https://img.youtube.com/vi/${url.match(/v=([^&]+)/)?.[1]||'dQw4w9WgXcQ'}/0.jpg`||'https://via.placeholder.com/640x360/007bff/fff?text=DUKERHUB';}catch{return'https://via.placeholder.com/640x360/007bff/fff?text=HD';}}
 
-    function verifyAge() {
-        document.getElementById('ageGate').style.display = 'none';
-        if(!localStorage.getItem('activeUser')) document.getElementById('authModal').style.display = 'flex';
-    }
+function uploadVideo(){const t=document.getElementById('videoTitle').value,c=document.getElementById('videoCat').value,f=document.getElementById('fileInput').files[0],e=document.getElementById('embedInput').value;if(!t)return alert('Título!');const btn=document.getElementById('uploadBtn');btn.disabled=true;btn.innerText='GERANDO CAPA...';
+if(f){const r=new FileReader();r.onload=async e=>{const thumb=await generateThumb(e.target.result,'file');db.ref('videos').push({title:t,cat:c,url:e.target.result,thumb,type:'file',date:Date.now(),views:0,duration:'10:23'}).then(()=>{alert('✅ Publicado!');location.reload();});};r.readAsDataURL(f);}else if(e){const src=e.match(/src="([^"]+)"/)?.[1]||e;const thumb=await generateThumb(src,'embed');db.ref('videos').push({title:t,cat:c,url:src,thumb,type:'embed',date:Date.now(),views:0,duration:'12:45'}).then(()=>{alert('✅ Publicado!');location.reload();});}}
 
-    function toggleAuth() {
-        isLogin = !isLogin;
-        document.getElementById('authTitle').innerText = isLogin ? "Login" : "Cadastro";
-        document.getElementById('authBtn').innerText = isLogin ? "ENTRAR" : "CADASTRAR";
-    }
+async function loadVideos(){document.getElementById('loading').style.display='block';videos=[];db.ref('videos').orderByChild('date').limitToLast(50).once('value',async s=>{const data=Object.values(s.val()||{}).reverse();for(let v of data){if(currentCat!=='Tudo'&&v.cat!==currentCat)continue;v.thumb=await generateThumb(v.url,v.type);videos.push(v);}renderGrid();document.getElementById('loading').style.display='none';});}
 
-    function handleAuth() {
-        const email = document.getElementById('uEmail').value.trim();
-        const pass = document.getElementById('uPass').value.trim();
-        if(!email || !pass) return alert("Preencha os campos!");
+function setCategory(btn){currentCat=btn.dataset.cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderGrid();}
 
-        if(isLogin) {
-            db.ref('users').orderByChild('email').equalTo(email).once('value', snap => {
-                if(snap.exists() && Object.values(snap.val())[0].pass === pass) {
-                    localStorage.setItem('activeUser', email);
-                    unlockSite();
-                } else { alert("Acesso negado!"); }
-            });
-        } else {
-            db.ref('users').push({ email, pass }).then(() => { alert("Conta criada!"); toggleAuth(); });
-        }
-    }
+function renderGrid(){const grid=document.getElementById('videoGrid');grid.innerHTML='';let i=0;videos.slice(0,24).forEach(v=>{if(i%5===0&&i>0)grid.innerHTML+=`<div class="ad-row" style="grid-column:1/-1;height:100px;background:#0a1120;border:1px solid var(--p);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--p);font-weight:700">🔥 ADS PREMIUM 2026 🔥</div>`;const card=document.createElement('div');card.className='v-card';card.onclick=()=>playVideo(v);card.innerHTML=`<div class="v-thumb"><img src="${v.thumb}" loading="lazy" onerror="this.src='https://via.placeholder.com/640x360/007bff/fff?text=HD'"><span class="v-duration">${v.duration||'LIVE'}</span></div><div class="v-info">${v.title}</div>`;grid.appendChild(card);i++;});}
 
-    function unlockSite() {
-        document.getElementById('authModal').style.display = 'none';
-        document.getElementById('mainUI').classList.add('unlocked');
-        render('Tudo');
-    }
+function playVideo(v){document.getElementById('playerOverlay').classList.add('active');const content=document.getElementById('playerContent');content.innerHTML=v.type==='embed'?'<iframe src="'+v.url+'" allowfullscreen allow="autoplay"></iframe>':'<video src="'+v.url+'" controls autoplay muted playsinline></video>';}
 
-    function logout() { localStorage.clear(); location.reload(); }
+function closePlayer(){document.getElementById('playerOverlay').classList.remove('active');document.getElementById('playerContent').innerHTML='';}
 
-    // --- BLOQUEIO REMOTO "DELEX" ---
-    db.ref('settings/status').on('value', snap => {
-        if(snap.val() === 'blocked') {
-            document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%;'>SISTEMA BLOQUEADO: COMANDO DELEX ATIVO</h1>";
-            document.body.style.background = "#000";
-        }
-    });
+function togglePost(){document.getElementById('postSection').style.display=document.getElementById('postSection').style.display==='block'?'none':'block';}
 
-    // --- UPLOAD E THUMBNAIL ---
-    function toggleUpload() {
-        const box = document.getElementById('uploadSection');
-        box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    }
-
-    async function processUpload() {
-        const title = document.getElementById('vTitle').value;
-        const cat = document.getElementById('vCat').value;
-        const file = document.getElementById('vFile').files[0];
-        const embed = document.getElementById('vEmbed').value;
-        const btn = document.getElementById('upBtn');
-
-        if(!title || (!file && !embed)) return alert("Dados insuficientes!");
-
-        btn.disabled = true; btn.innerText = "PROCESSANDO...";
-
-        let finalUrl = "";
-        let finalThumb = "https://via.placeholder.com/400x225/007bff/ffffff?text=DUKERHUB";
-        let type = embed ? "embed" : "file";
-
-        if(type === "file") {
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                finalUrl = e.target.result;
-                finalThumb = await generateAutoThumb(finalUrl);
-                saveVideo(title, cat, finalUrl, finalThumb, "file");
-            };
-            reader.readAsDataURL(file);
-        } else {
-            // Extrair URL do iframe se o usuário colou o código todo
-            const match = embed.match(/src="([^"]+)"/);
-            finalUrl = match ? match[1] : embed;
-            saveVideo(title, cat, finalUrl, finalThumb, "embed");
-        }
-    }
-
-    function generateAutoThumb(url) {
-        return new Promise(res => {
-            const v = document.createElement('video');
-            v.src = url; v.currentTime = 1; v.muted = true;
-            v.onloadeddata = () => {
-                setTimeout(() => {
-                    const canvas = document.getElementById('thumbCanvas');
-                    canvas.width = 400; canvas.height = 225;
-                    canvas.getContext('2d').drawImage(v, 0, 0, 400, 225);
-                    res(canvas.toDataURL('image/jpeg'));
-                }, 500);
-            };
-        });
-    }
-
-    function saveVideo(title, cat, url, thumb, type) {
-        db.ref('videos').push({ title, cat, url, thumb, type, date: Date.now() }).then(() => {
-            alert("Vídeo publicado com sucesso!");
-            location.reload();
-        });
-    }
-
-    // --- RENDERIZAÇÃO E ANÚNCIOS ---
-    function render(filter, el) {
-        if(el) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-        }
-        const grid = document.getElementById('videoGrid');
-        grid.innerHTML = '';
-
-        db.ref('videos').on('value', snap => {
-            grid.innerHTML = '';
-            let count = 0;
-            snap.forEach(child => {
-                const v = child.val();
-                if(filter !== 'Tudo' && v.cat !== filter) return;
-
-                // Injetar anúncio a cada 4 vídeos
-                if(count > 0 && count % 4 === 0) {
-                    grid.innerHTML += `<div class="ad-slot">PUBLICIDADE - MAKINA ADS</div>`;
-                }
-
-                const card = document.createElement('div');
-                card.className = 'v-card';
-                card.onclick = () => openPlayer(v.url, v.type);
-                card.innerHTML = `
-                    <div class="v-thumb"><img src="${v.thumb}"></div>
-                    <div class="v-info">${v.title}</div>
-                `;
-                grid.appendChild(card);
-                count++;
-            });
-        });
-    }
-
-    // --- PLAYER MULTIFUNCIONAL ---
-    function openPlayer(url, type) {
-        const modal = document.getElementById('playerModal');
-        const container = document.getElementById('playerContainer');
-        modal.classList.add('active');
-
-        if(type === "embed") {
-            container.innerHTML = `<iframe src="${url}" frameborder="0" scrolling="no" allowfullscreen></iframe>`;
-        } else {
-            // Player nativo com "simulação" de qualidade (os navegadores gerenciam via bitrate se disponível)
-            container.innerHTML = `
-                <video id="vSource" controls>
-                    <source src="${url}" type="video/mp4">
-                </video>
-                <div style="background:#111; padding:10px; font-size:12px; display:flex; gap:10px;">
-                    <span style="color:var(--primary)">Qualidade: Auto (HD)</span>
-                </div>`;
-            document.getElementById('vSource').play();
-        }
-    }
-
-    function closePlayer() {
-        document.getElementById('playerModal').classList.remove('active');
-        document.getElementById('playerContainer').innerHTML = '';
-    }
+function logout(){localStorage.clear();location.reload();}
 </script>
-
-<footer style="text-align:center; padding:40px; color:#334155; font-size:13px;">
-    © 2026 MAKINA COMPANY - CEO: Eng.makina
-</footer>
-
+<footer style="text-align:center;padding:30px;color:#334155;font-size:12px">© 2026 DUKERHUB - Todos Vídeos HD</footer>
 </body>
 </html>
